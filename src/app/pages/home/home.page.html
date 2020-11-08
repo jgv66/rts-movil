@@ -1,0 +1,22 @@
+<app-header titulo="App RTS-Móvil"></app-header>
+
+<ion-content class="ion-padding" style="margin-left: 15px; margin-right: 15px;">
+
+    <img src="assets/imgs/logo-001.png" alt="RTS" class="logo-001" (click)="entrar()">
+
+    <p style="margin-left: 35px; margin-right: 35px;margin-top: 70px; margin-bottom:60px; text-align: justify;"><b>
+            Sistema móvil de recolección de datos en planta productiva. Conexión automática al ERP Softland. Actualización en línea. Pulse sobre el logo para ingresar.
+  </b></p>
+
+    <img src="assets/imgs/logo-kinetik.png" alt="kinetik" class="logo-kinetik" (click)="entrar()">
+
+    <p style="text-align: center;" class="sistema2">v0.5.0 2020-10-29</p>
+
+    <button type="button" class="ad2hs-prompt" *ngIf="showButton" (click)="addToHomeScreen()">Instalar aplicación Web</button>
+    <div class="ios-prompt" *ngIf="showIosInstall" (click)="showIosInstall = false;">
+        <span style="color: rgb(187, 187, 187); float: right; margin-top: -10px; margin-right: -7px;">&times;</span>
+        <img src="assets/imgs/add2home.svg" style="float: left; height: 80px; width: auto; margin-top: -4px; margin-right: 1rem;">
+        <p style="margin-top: 0.4rem; line-height: 1.8rem;">Para instalar esta aplicación Web en tu iPhone/iPad presiona <img src="assets/imgs/share.svg" style="display: inline-block; margin-top: 4px; margin-bottom: -4px; height: 20px; width: auto;"> y luego Agregar a Inicio.</p>
+    </div>
+
+</ion-content>

@@ -1,0 +1,121 @@
+<div *ngIf=" crear === true ">
+    <app-hd titulo="Mantención de Máquinas" (clickPost)="salir()"></app-hd>
+</div>
+<div *ngIf=" crear === false ">
+    <app-hd titulo="Mantención de Máquinas" (clickPost)="salir()" (deletePost)="borrarMaquina()"></app-hd>
+</div>
+
+<ion-content>
+    <ion-card style="margin-top: 10px;">
+        <ion-card-header>
+            <img src="assets/imgs/maquinasdef.png" alt="x1">
+        </ion-card-header>
+        <ion-list>
+            <ion-list-header *ngIf=" crear === false ">
+                <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;">
+                    <b>{{ maquina.maquina }}</b>
+                </h2>
+            </ion-list-header>
+            <ion-list-header *ngIf=" crear === true ">
+                <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;">
+                    <b>NUEVA MAQUINA</b>
+                </h2>
+            </ion-list-header>
+
+            <ion-item *ngIf=" crear === true ">
+                <ion-label position="fixed" style="min-width:180px;">Código de Máquina</ion-label>
+                <ion-input type="text" name="codmaquina" [(ngModel)]="codmaquina"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="fixed">Descripción</ion-label>
+                <ion-input type="text" name="descripcion" [(ngModel)]="descripcion"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="fixed" style="min-width:220px;">Está activa?</ion-label>
+                <ion-toggle [(ngModel)]="activa"></ion-toggle>
+            </ion-item>
+            <ion-item>
+                <ion-label position="fixed" style="min-width:220px;">Última mantención</ion-label>
+                <ion-datetime display-format="DD.MM.YYYY" name="ultimamant" [(ngModel)]="ultimamant"></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label position="fixed" style="min-width:220px;">Días entre mantenciones</ion-label>
+                <ion-input type="number" name="diasentremant" [(ngModel)]="diasentremant"></ion-input>
+            </ion-item>
+        </ion-list>
+        <ion-button (click)="actualizar()" expand="block" color="primary" style="margin-top: 25px; margin-bottom: 25px">
+            <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+            {{ ( crear === true ) ? 'Crear' : 'Actualizar' }}
+        </ion-button>
+    </ion-card>
+
+    <!-- <form>
+        <ion-grid>
+            <ion-row>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Name</ion-label>
+                        <ion-input type="text"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Email</ion-label>
+                        <ion-input type="email"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Country</ion-label>
+                        <ion-select value="usa" okText="Okay" cancelText="Dismiss">
+                            <ion-select-option value="usa">United States</ion-select-option>
+                            <ion-select-option value="india">India</ion-select-option>
+                            <ion-select-option value="france">France</ion-select-option>
+                            <ion-select-option value="spain">Spain</ion-select-option>
+                            <ion-select-option value="brazil">Brazil</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="4" size-sm="4" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Choose City</ion-label>
+                        <ion-select value="california" okText="Okay" cancelText="Dismiss">
+                            <ion-select-option value="california">California</ion-select-option>
+                            <ion-select-option value="illinois">Illinois</ion-select-option>
+                            <ion-select-option value="texas">Texas</ion-select-option>
+                            <ion-select-option value="pennsylvania">Pennsylvania</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="4" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Address</ion-label>
+                        <ion-textarea></ion-textarea>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="4" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Postal Code</ion-label>
+                        <ion-input type="text"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="4" size-md="4" size-sm="4" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Gender</ion-label>
+                        <ion-select value="male" okText="Okay" cancelText="Dismiss">
+                            <ion-select-option value="male">Male</ion-select-option>
+                            <ion-select-option value="female">female</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="4" size-md="4" size-sm="4" size="12">
+                    <ion-item>
+                        <ion-label position="floating">Age</ion-label>
+                        <ion-input type="number"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form> -->
+
+</ion-content>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">rbs-movil</string>
+    <string name="title_activity_main">rbs-movil</string>
+    <string name="package_name">cl.kinetik.rbsmovil</string>
+    <string name="custom_url_scheme">cl.kinetik.rbsmovil</string>
+</resources>

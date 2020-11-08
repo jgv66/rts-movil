@@ -1,0 +1,37 @@
+<app-hd titulo="Máquinas" (clickPost)="salir()" (addPost)="tratMaquina( true )"></app-hd>
+
+<ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+<ion-content class="animated fadeIn">
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Tire para refrescar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-card class="welcome-card">
+        <img src="assets/imgs/maquinas.png" alt="x1">
+    </ion-card>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let maq of maquinas; let i = index;">
+                <ion-item detail (click)="tratMaquina( false, maq )">
+                    <ion-avatar slot="start">
+                        <img [src]="maq.picture" alt="x2">
+                    </ion-avatar>
+                    <ion-label>
+                        <h2 style="font-weight: bold; color: red"><b>{{ maq.maquina }}</b></h2>
+                        <h3 style="font-weight: bold;" color="primary">{{ maq.descripcion }}</h3>
+                        <p>Estado : {{ maq.activa ? 'Activa' : 'NO ACTIVA' }}</p>
+                        <p>Mantención : {{ maq.fuerademant ? 'Sin Mantención' : 'Correcta' }}</p>
+                        <p>Ultima Mant.: {{ maq.ultimamant | date }}</p>
+                        <p>Prox. Mantención: {{ maq.proximamant | date }}</p>
+                        <p>Dias entre mantenciones: {{ maq.diasentremant | number:"1.0-0" }}</p>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

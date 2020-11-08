@@ -1,0 +1,74 @@
+<app-header titulo="Ingresar al sistema"></app-header>
+
+<ion-content class="ion-padding" style="margin-left: 15px; margin-right: 15px;">
+
+    <img src="assets/imgs/logo-001.png" alt="RTS" class="logo-001">
+
+    <!-- <p style="text-align: center; padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px;"> -->
+    <h3 style="text-align: center; padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px;">Acceda con sus datos</h3>
+    <!-- </p> -->
+
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col ofsset-md="2"></ion-col>
+            <ion-col size="12" size-xl="8" size-lg="8" size-md="8" size-sm="8" size-xs="12">
+                <ion-card class="ion-no-padding">
+                    <ion-list>
+
+                        <ion-item lines='none'>
+                            <ion-label position="floating">Correo electrónico</ion-label>
+                            <ion-input type="text" name="email" [(ngModel)]="email" required clearInput=true></ion-input>
+                        </ion-item>
+
+                        <ion-item lines='none'>
+                            <ion-label position="floating">Su clave...</ion-label>
+                            <ion-input type="password" name="clave" [(ngModel)]="clave" required clearInput=true></ion-input>
+                        </ion-item>
+
+                        <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col size="4">
+                                    <ion-button expand="block" size="small" (click)="salir()">Salir</ion-button>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <ion-button expand="block" size="small" (click)="logearme()">Ingresar</ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+
+                    </ion-list>
+                </ion-card>
+            </ion-col>
+            <ion-col ofsset-md="3"></ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <img src="assets/imgs/logo-kinetik.png" alt="" class="logo-kinetik">
+
+</ion-content>
+
+
+<!-- <ion-grid>
+	<ion-row justify-content-center>
+		<ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+			<div text-center>
+				<h4>Login Form</h4>
+			</div>
+			<div padding>
+				<ion-item>
+					<ion-input type="text" placeholder="Username"></ion-input>
+				</ion-item>
+
+				<ion-item>
+					<ion-input type="password" placeholder="Password"></ion-input>
+				</ion-item>
+			</div>
+
+			<div padding>
+				<ion-button size="large" href="/touchid" expand="block">Login</ion-button>
+			</div>
+		</ion-col>
+	</ion-row>
+</ion-grid> -->
