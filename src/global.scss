@@ -47,10 +47,6 @@
     margin: 0.5rem auto 3rem;
 }
 
-.button {
-    text-transform: none!important;
-}
-
 ion-toast {
     --max-width: 75%;
     --background: var( --ion-color-danger-tint);
@@ -101,9 +97,12 @@ ion-toast {
     animation-name: fadeIn;
 }
 
-ion-content {
-    // --background: #2D4A2E;
-    // --background: #2D4A2E url('assets/imgs/fondo-001.jpg') no-repeat center center / cover;
+// ion-content {
+//     --background: #2D4A2E;
+//     --background: #2D4A2E url('assets/imgs/fondo-001.jpg') no-repeat center center / cover;
+// }
+ion-button {
+    text-transform: none!important;
 }
 
 .alertaError {
@@ -120,3 +119,105 @@ ion-content {
         --background: #ffce00;
     }
 }
+
+.mi-modal-mas-alto-css {
+    --backdrop-opacity: 0.3 !important;
+    .modal-wrapper {
+        --height: 80% !important;
+        width: 90% !important;
+        position: absolute;
+        box-shadow: 0 16px 20px rgba(0, 0, 0, .4);
+        background-color: #fafafa;
+        border-radius: 10px;
+    }
+}
+
+// .popover_setting .popover-content {
+//     --min-width: 600px !important;
+//     --min-height: 150px !important;
+//     --ion-background-color: red;
+//     --ion-text-color: #ffffff;
+//     background-color: red;
+// }
+// .mi-popover-mas-ancho-css {
+//     top: 0 !important;
+//     left: inherit !important;
+//     right: 0;
+//     transform-origin: right top !important;
+//     --min-height: 100%;
+//     background: white;
+//     box-shadow: -8px 0 16px rgba(0, 0, 0, 0.12);
+//     border-radius: 0;
+// }
+// ion-popover-view.fit {
+//     height: auto;
+// }
+// ion-popover-view.fit ion-content {
+//     position: relative;
+// }
+// .platform-android ion-popover-view.fit {
+//     margin-top: 10px;
+// }
+// .platform-ios ion-popover-view.fit {
+//     padding-top: 10px;
+//     padding-bottom: 10px;
+// }
+// // ion-popover.menu {
+// //     --width: 540px;
+// //     --max-width: 100%;
+// // }
+// ion-popover.menu div.popover-content {
+//     top: 0 !important;
+//     left: inherit !important;
+//     right: 0;
+//     transform-origin: right top !important;
+//     --min-height: 100%;
+//     background: white;
+//     box-shadow: -8px 0 16px rgba(0, 0, 0, 0.12);
+//     border-radius: 0;
+// }
+// @media (min-width: 680px) {
+//     .mymodal {
+//         width: 90%;
+//         height: 90%;
+//         top: 5%;
+//         left: 5%;
+//         right: 5%;
+//         bottom: 5%;
+//     }
+// }
+// .pricebreakup .modal-wrapper {
+//     position: absolute;
+//     overflow: hidden;
+//     max-width: 320px;
+//     border-radius: 10px;
+//     width: 90vw;
+//     height: 50vh !important;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     margin: auto;
+//     border: 0;
+//     box-shadow: 0 16px 20px rgba(0, 0, 0, .4);
+//     background-color: #fafafa;
+// }
+// modal-wrapper {
+//     position: absolute;
+//     width: 100%;
+//     height: 100%;
+// }
+// @media not all and (min-height: 600px) and (min-width: 768px) {
+//     ion-modal ion-backdrop {
+//         visibility: hidden;
+//     }
+// }
+// @media only screen and (min-height: 0px) and (min-width: 0px) {
+//     .modal-wrapper {
+//         position: absolute;
+//         top: 0;
+//         left: 0;
+//         width: 100%;
+//         height: 100%;
+//     }
+// }

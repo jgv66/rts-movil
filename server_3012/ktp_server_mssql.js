@@ -26,270 +26,121 @@ var server = app.listen(3012, function() {
 // pruebas
 app.get('/ping',
     function(req, res) {
-        res.json({ resultado: 'ok', datos: 'pong' });
+        res.json({ resultado: 'ok', datos: dbconex });
     }
 );
-// --------------------------------------------centros 
-app.get('/centros',
+// --------------------------------------------ordenes
+app.post('/ordenes',
     function(req, res) {
+        //        
+        console.log('/ordenes', req.body);
         //
-        var query = "select * from [ktb_centros] ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.post('/centros',
-    function(req, res) {
-        //
-        var query = "insert into [ktb_centros] (centro,descripcion) values ( '" + req.body.centro + "','" + req.body.descripcion + "' ) ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.put('/centros',
-    function(req, res) {
-        //
-        var query = "update [ktb_centros] set descripcion='" + req.body.descripcion + "' where centro='" + req.body.centro + "' ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.delete('/centros',
-    function(req, res) {
-        //
-        var query = "delete [ktb_centros] where centro='" + req.body.centro + "' ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-// --------------------------------------------entidades
-app.get('/entidades',
-    function(req, res) {
-        // los parametros
+        var tm;
         var query = '';
-        var razonrut = req.query.razon;
-        //
-        if (razonrut === '' || razonrut === undefined) {
-            query = "select * from [ktb_entidades] ;";
-        } else {
-            query = "select * from [ktb_entidades] " +
-                " where codaux like '%" + razonorut.rtrim() + "%' " +
-                " or rut like '%" + razonorut.rtrim() + "%' " +
-                " or razonsocial like '%" + razonorut.rtrim() + "%' ;";
+        try {
+            tm = JSON.parse(req.body.datos);
+        } catch (error) {
+            tm = undefined;
         }
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.post('/entidades',
-    function(req, res) {
-        // los parametros
-        var query = `insert into [ktb_entidades] (codaux,rut,razonsocial,direccion,comuna,ciudad,especialidad,calificacion) 
-                    values ('${ req.body.codaux }',
-                            '${ req.body.rut }',
-                            '${ req.body.razonsocial }',
-                            '${ req.body.direccion }',
-                            '${ req.body.comuna }',
-                            '${ req.body.ciudad }',
-                            '${ req.body.especialidad }',
-                             ${ req.body.calificacion } ); `;
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.put('/entidades',
-    function(req, res) {
-        // los parametros
-        var query = `update [ktb_entidades]
-                    set rut='${ req.body.rut }',
-                        razonsocial='${ req.body.razonsocial }',
-                        direccion='${ req.body.direccion }',
-                        comuna='${ req.body.comuna }',
-                        ciudad='${ req.body.ciudad }',
-                        especialidad='${ req.body.especialidad }',
-                        calificacion=${ req.body.calificacion }
-                    where codaux = '${ req.body.codaux }' ;`;
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.delete('/entidades',
-    function(req, res) {
+        console.log('/ordenes', tm);
         //
-        var query = "delete [ktb_entidades] where codaux='" + req.body.codaux + "' ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-// --------------------------------------------servicios
-app.get('/servicios',
-    function(req, res) {
-        //
-        var query = "select * from [ktb_servicios] ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.post('/servicios',
-    function(req, res) {
-        //
-        var query = "insert into [ktb_servicios] (servicio,descripcion) values ( '" + req.body.servicio + "','" + req.body.descripcion + "' ) ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.put('/servicios',
-    function(req, res) {
-        //
-        var query = "update [ktb_servicios] set descripcion='" + req.body.descripcion + "' where servicio='" + req.body.servicio + "' ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.delete('/servicios',
-    function(req, res) {
-        //
-        var query = "delete [ktb_servicios] where servicio='" + req.body.servicio + "' ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-// --------------------------------------------planos
-app.get('/planos',
-    function(req, res) {
-        // los parametros
-        var query = '';
-        var cliente = req.query.cliente;
-        var codigo = req.query.codigo;
-        //
-        if (cliente !== undefined && codigo !== undefined) {
-            query = `select * from [ktb_planos] where codaux = '${ cliente }' and codigo = '${ codigo }' ; `;
+        if (req.body.accion === 'select') {
+            query = `
+            select	top 100 
+                    t.*
+                    ,f.nombre as nombrefac 
+                    ,vb.nombre as nombrevb 
+                    ,m.descripcion as nombremaq 
+                    ,o.nombre as nombremae
+                    ,a1.nombre as nombreayu1
+                    ,a2.nombre as nombreayu2
+                    ,ob.observaciones
+            from ktb_ordendefab         as t with (nolock)
+            left join ktb_usuarios      as f with (nolock) on f.id = t.facilitador
+            left join ktb_usuarios      as vb with (nolock) on vb.id = t.vistobueno
+            left join ktb_maquinas      as m with (nolock) on m.maquina = t.maquina
+            left join ktb_operarios     as o with (nolock) on o.operario=t.maestro
+            left join ktb_operarios     as a1 with (nolock) on a1.operario=t.ayudante1
+            left join ktb_operarios     as a2 with (nolock) on a2.operario=t.ayudante2
+            left join ktb_ordendefabobs as ob with (nolock) on ob.id_ordendefab=t.id
+            order by t.fecha desc;
+            `;
+        } else if (req.body.accion === 'insert') {
+            query = ``;
+        } else if (req.body.accion === 'update') {
+            query = ``;
+        } else if (req.body.accion === 'delete') {
+            query = ``;
         } else {
-            query = `select * from [ktb_planos] `;
+            query = `
+            select 'sin accion en tml' as error ;
+            `;
+        }
+        //        
+        console.log(query);
+        //
+        sql.close();
+        sql.connect(dbconex[0])
+            .then(pool => {
+                return pool.request().query(query);
+            })
+            .then(resultado => {
+                // console.log(resultado);
+                res.json({ resultado: 'ok', datos: resultado.recordset });
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({ resultado: 'error', datos: err });
+            });
+    });
+app.post('/ordenesSoft',
+    function(req, res) {
+        //        
+        console.log('/ordenesSoft', req.body);
+        //
+        var tm;
+        var query = '';
+        try {
+            nv = JSON.parse(req.body.datos);
+        } catch (error) {
+            nv = undefined;
         }
         //
+        if (req.body.accion === 'select') {
+            query = `
+            select	top 100 
+                    nv.NVNumero as folio
+                    ,convert(varchar, nv.nvFem, 103)  fechaemision
+                    ,convert(varchar, nv.nvFeEnt, 103) fechaprometida
+                    ,nv.CodAux as cliente,cli.NomAux as razonsocial
+                    ,nv.VenCod as vendedor,ve.VenDes as nombrevend
+                    ,nv.nvObser as observaciones
+                    ,nv.NumOC as oc
+                    ,det.CodProd as codigo,det.nvCant cantidad,det.CodUMed as um
+                    ,det.DetProd as descripcion
+            from softland.nw_nventa as nv with (nolock)
+            inner join softland.nw_detnv as det with (nolock) on det.NVNumero = nv.NVNumero
+            left join softland.cwtvend as ve with (nolock) on ve.VenCod = nv.VenCod
+            left join softland.cwtauxi as cli with (nolock) on cli.CodAux = nv.CodAux 
+            where nv.NVNumero = ${ nv.nvv }
+            order by nvFeEnt desc
+            `;
+        } else if (req.body.accion === 'insert') {
+            query = ``;
+        } else if (req.body.accion === 'update') {
+            query = ``;
+        } else if (req.body.accion === 'delete') {
+            query = ``;
+        } else {
+            query = `
+            select 'sin accion en tml' as error ;
+            `;
+        }
+        //        
+        console.log(query);
+        //
         sql.close();
-        sql.connect(dbconex)
+        sql.connect(dbconex[1])
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -302,167 +153,7 @@ app.get('/planos',
                 res.json({ resultado: 'error', datos: err });
             });
     });
-app.post('/planos',
-    function(req, res) {
-        //
-        var query = `insert into [ktb_planos] (plano,codaux,codigo,descripcion,extension,link,archivo) 
-                    values ('${ req.body.plano}',
-                            '${ req.body.codaux}',
-                            '${ req.body.codigo}',
-                            '${ req.body.descripcion}',
-                            '${ req.body.extension}',
-                            '${ req.body.link}',
-                            '${ req.body.archivo}' ) ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.put('/planos',
-    function(req, res) {
-        //
-        var query = `update [ktb_planos]
-                    set descripcion='${ req.body.descripcion}',
-                        extension='${ req.body.extension}',
-                        link='${ req.body.link}',
-                        archivo='${ req.body.archivo}'
-                    where plano  = '${ req.body.plano}'
-                      and codaux = '${ req.body.codaux}'
-                      and codigo = '${ req.body.codigo}' ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.delete('/planos',
-    function(req, res) {
-        //
-        var query = `delete [ktb_planos]
-                    where plano  = '${ req.body.plano}'
-                      and codaux = '${ req.body.codaux}'
-                      and codigo = '${ req.body.codigo}' ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-// --------------------------------------------procesos
-app.get('/procesos',
-    function(req, res) {
-        //
-        var query = "select * from [ktb_procesos] ;";
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.post('/procesos',
-    function(req, res) {
-        //
-        var query = `insert into [ktb_procesos] (proceso,descripcion,maquina,tienealternativas,tienesubprocesos) 
-                    values ('${ req.body.proceso}',
-                            '${ req.body.descripcion}',
-                            '${ req.body.maquina}',
-                            ${ req.body.tienealternativas },
-                            ${ req.body.tienesubprocesos} ) ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.put('/procesos',
-    function(req, res) {
-        //
-        var query = `update into [ktb_procesos] 
-                    set descripcion='${ req.body.descripcion}',
-                        maquina='${ req.body.maquina}',
-                        tienealternativas=${ req.body.tienealternativas },
-                        tienesubprocesos=${ req.body.tienesubprocesos} ) 
-                    where proceso = '${ req.body.proceso}' ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
-app.delete('/procesos',
-    function(req, res) {
-        //
-        var query = `delete [ktb_procesos] 
-                    where proceso = '${ req.body.proceso}' ;`;
-        //
-        sql.close();
-        sql.connect(dbconex)
-            .then(pool => {
-                return pool.request().query(query);
-            })
-            .then(resultado => {
-                // console.log(resultado);
-                res.json({ resultado: 'ok', datos: resultado.recordset });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({ resultado: 'error', datos: err });
-            });
-    });
+
 // --------------------------------------------maquinas
 app.post('/maquinas',
     function(req, res) {
@@ -515,14 +206,14 @@ app.post('/maquinas',
             `;
         } else {
             query = `
-            select 'sin accion en parametros' as error ;
+            select 'sin accion en maquinas' as error ;
             `;
         }
         //        
         console.log(query);
         //
         sql.close();
-        sql.connect(dbconex)
+        sql.connect(dbconex[0])
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -591,14 +282,14 @@ app.post('/operarios',
             `;
         } else {
             query = `
-            select 'sin accion en parametros' as error ;
+            select 'sin accion en operarios' as error ;
             `;
         }
         //        
         console.log(query);
         //
         sql.close();
-        sql.connect(dbconex)
+        sql.connect(dbconex[0])
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -634,58 +325,63 @@ app.post('/tml',
                     ,o.nombre as nombreoper
                     ,a1.nombre as nombreayu1
                     ,a2.nombre as nombreayu2
+                    ,me.nombre as nombremec
             from ktb_tml as t with (nolock)
             left join ktb_usuarios as f with (nolock) on f.id = t.facilitador
             left join ktb_maquinas as m with (nolock) on m.maquina = t.maquina
             left join ktb_operarios as o with (nolock) on o.operario=t.operador
             left join ktb_operarios as a1 with (nolock) on a1.operario=t.ayudante1
             left join ktb_operarios as a2 with (nolock) on a2.operario=t.ayudante2
+            left join ktb_operarios as me with (nolock) on me.operario=t.mecanico
             order by t.fecha desc, t.horadesde desc, t.facilitador;
             `;
         } else if (req.body.accion === 'insert') {
             query = `
-                insert into [ktb_operarios] (operario,nombre,esmaestro,esmecanico,genero,ingreso,activo) 
-                values ('${ oper.operario }',
-                        '${ oper.nombre }',
-                        ${ oper.esmaestro === true ? 1 : 0 },
-                        ${ oper.esmecanico === true ? 1 : 0 },
-                        '${ oper.genero }',
-                        '${ oper.ingreso }',
-                        ${ oper.activo === true ? 1 : 0 } );
+                insert into [ktb_tml] (facilitador,fecha,turno,fecharegistro,maquina,horadesde,horahasta,operador,ayudante1,ayudante2,mecanico,descripcion) 
+                values (${ tm.facilitador },
+                        '${ tm.fecha }',
+                        '${ tm.turno }',
+                        getdate(),
+                        '${ tm.maquina }',
+                        '${ tm.horaini }',
+                        '${ tm.horafin }',
+                        '${ tm.operador }',
+                        '${ tm.ayudante1 }',
+                        '${ tm.ayudante2 }',
+                        '${ tm.mecanico }',
+                        '${ tm.descripcion }' );
             `;
         } else if (req.body.accion === 'update') {
             query = `
-                update [ktb_operarios] 
-                set nombre='${ oper.nombre }',
-                    esmaestro=${ oper.esmaestro === true ? 1 : 0 },
-                    esmecanico=${ oper.esmecanico === true ? 1 : 0 },
-                    ingreso='${ oper.ingreso }',
-                    genero='${ oper.genero }',
-                    activo=${ oper.activo === true ? 1 : 0 }
-                where operario='${ oper.operario }' ;
+                update [ktb_tml] 
+                set facilitador=${ tm.facilitador },
+                    fecha='${ tm.fecha }',
+                    turno='${ tm.turno }',
+                    fecharegistro=getdate(),
+                    maquina='${ tm.maquina }',
+                    horadesde='${ tm.horaini }',
+                    horahasta='${ tm.horafin }',
+                    operador='${ tm.operador }',
+                    ayudante1='${ tm.ayudante1 }',
+                    ayudante2='${ tm.ayudante2 }',
+                    mecanico='${ tm.mecanico }',
+                    descripcion='${ tm.descripcion }'
+                where id='${ tm.id }'
             `;
         } else if (req.body.accion === 'delete') {
             query = `
-                if not exists ( select * 
-                                from [ktb_of] with (nolock)
-                                where maestro = '${ oper.operario }' ) begin 
-                   delete [ktb_operarios] where operario='${ oper.operario }'
-                   select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;;
-                end
-                else begin
-                   select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Operario existe en OF' as  mensaje;
-                end ;
+                delete [ktb_tml] where id='${ tm.id }' ;
             `;
         } else {
             query = `
-            select 'sin accion en parametros' as error ;
+            select 'sin accion en tml' as error ;
             `;
         }
         //        
         console.log(query);
         //
         sql.close();
-        sql.connect(dbconex)
+        sql.connect(dbconex[0])
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -743,14 +439,14 @@ app.post('/usuarios',
             `;
         } else {
             query = `
-                select 'el sin accion' as error ;
+                select 'sin accion en usuarios' as error ;
             `;
         }
         //        
         console.log(query);
         //
         sql.close();
-        sql.connect(dbconex)
+        sql.connect(dbconex[0])
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -763,4 +459,129 @@ app.post('/usuarios',
                 res.json({ resultado: 'error', datos: err });
             });
     });
-// --------------------------------------------permisos
+// --------------------------------------------procesos
+app.post('/procesos',
+    function(req, res) {
+        console.log('/procesos', req.body);
+        var pro;
+        var query = '';
+        try {
+            pro = JSON.parse(req.body.datos);
+        } catch (error) {
+            pro = undefined;
+        }
+        console.log(pro);
+        //
+        if (req.body.accion === 'select') {
+            query = `
+            select  *
+            from [ktb_procesos] 
+            order by proceso ;
+        `;
+        } else if (req.body.accion === 'insert') {
+            query = `
+            insert into [ktb_procesos] (proceso, descripcion) 
+            values ('${ pro.proceso }','${ pro.descripcion }' ) ;
+        `;
+        } else if (req.body.accion === 'update') {
+            query = `
+            update [ktb_procesos] 
+            set descripcion='${ pro.descripcion }'
+            where proceso='${ pro.proceso }' ;
+        `;
+        } else if (req.body.accion === 'delete') {
+            query = `
+            if  not exists ( select * from [ktb_ordendefab] with (nolock) where proceso = '${ pro.proceso }' ) begin 
+                delete [ktb_procesos] where proceso='${ pro.proceso }'
+                select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;;
+            end
+            else begin
+                select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Proceso existe en OF' as  mensaje;
+            end ;
+        `;
+        } else {
+            query = `
+        select 'sin accion en procesos' as error ;
+        `;
+        }
+        //        
+        console.log(query);
+        //
+        sql.close();
+        sql.connect(dbconex[0])
+            .then(pool => {
+                return pool.request().query(query);
+            })
+            .then(resultado => {
+                // console.log(resultado);
+                res.json({ resultado: 'ok', datos: resultado.recordset });
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({ resultado: 'error', datos: err });
+            });
+
+    });
+// --------------------------------------------servicios
+app.post('/estatus',
+    function(req, res) {
+        // console.log('/estatus', req.body);
+        var ser;
+        var query = '';
+        try {
+            est = JSON.parse(req.body.datos);
+        } catch (error) {
+            est = undefined;
+        }
+        console.log(est);
+        //
+        if (req.body.accion === 'select') {
+            query = `
+            select  *
+            from [ktb_estatus] 
+            order by estatus ;
+        `;
+        } else if (req.body.accion === 'insert') {
+            query = `
+            insert into [ktb_estatus] (estatus, descripcion) 
+            values ('${ est.estatus }','${ est.descripcion }' ) ;
+        `;
+        } else if (req.body.accion === 'update') {
+            query = `
+            update [ktb_estatus] 
+            set descripcion='${ est.descripcion }',
+            where estatus='${ est.estatus }' ;
+        `;
+        } else if (req.body.accion === 'delete') {
+            query = `
+            if  not exists ( select * from [ktb_ordendefab] with (nolock) where estatus = '${ est.estatus }' ) begin 
+                delete [ktb_estatus] where estatus='${ est.estatus }'
+                select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;;
+            end
+            else begin
+                select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Estatus existe en OF' as  mensaje;
+            end ;
+        `;
+        } else {
+            query = `
+        select 'sin accion en Estatuss' as error ;
+        `;
+        }
+        //        
+        console.log(query);
+        //
+        sql.close();
+        sql.connect(dbconex[0])
+            .then(pool => {
+                return pool.request().query(query);
+            })
+            .then(resultado => {
+                // console.log(resultado);
+                res.json({ resultado: 'ok', datos: resultado.recordset });
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({ resultado: 'error', datos: err });
+            });
+
+    });

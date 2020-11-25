@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { FuncionesService } from 'src/app/services/funciones.service';
-import { NetworkengineService } from 'src/app/services/networkengine.service';
 import { BaselocalService } from '../../services/baselocal.service';
 
 @Component({
@@ -26,8 +25,7 @@ export class DefmaquinasdefPage implements OnInit {
   constructor(private modalCtrl: ModalController,
               private alertCtrl: AlertController,
               public baseLocal: BaselocalService,
-              private funciones: FuncionesService,
-              private netWork: NetworkengineService ) {}
+              private funciones: FuncionesService ) {}
 
   ngOnInit() {
     if ( this.crear === false ) {
@@ -51,7 +49,7 @@ export class DefmaquinasdefPage implements OnInit {
           text: 'No',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: (blah) => {}
+          handler: () => {}
         }, {
           text: 'Sí, borrar',
           handler: () => { this.accion = 'borrar';

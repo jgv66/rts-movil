@@ -39,6 +39,7 @@ export class DefmaquinasPage implements OnInit {
 
   cargaMaquinas( event? ) {
     let i = 0;
+    let j ;
     this.buscando = true;
     this.netWork.comWithServer('maquinas', { accion: 'select', idusuario: this.datos.user.id } )
       .subscribe( (data: any) => {
@@ -51,10 +52,10 @@ export class DefmaquinasPage implements OnInit {
               this.funciones.msgAlertErr('No existen máquinas definidas.' );
           } else {
             //
-            for ( i = 0; i <= data.resultado.length; ++i ) {
-              data.datos[i].picture = 'assets/imgs/maquina0' + Math.floor((Math.random() * 7) + 1).toString() + '.png';
+            for ( i = 0; i < data.datos.length; ++i ) {
+              j = Math.floor((Math.random() * 7) + 1);
+              data.datos[i].picture = 'assets/imgs/maquina0' + j.toString() + '.png';
             }
-            // console.log( data.datos );
             this.maquinas = data.datos;
             //
             if ( event !== undefined ) {
@@ -95,7 +96,6 @@ export class DefmaquinasPage implements OnInit {
       }
     }
   }
-
   efecto( data, movimiento ) {
     console.log('efecto', movimiento, data);
     this.buscando = true;

@@ -17,16 +17,17 @@
         <ion-row>
             <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let tiempo of tiempos; let i = index;">
                 <ion-item detail (click)="tratTML( false, tiempo )">
-                    <!-- <ion-avatar slot="start">
+                    <ion-avatar slot="start">
                         <img src="assets/imgs/tml01.png" alt="x2">
-                    </ion-avatar> -->
+                    </ion-avatar>
                     <ion-label>
                         <h3 style="font-weight: bold; color: red"><b>{{ tiempo.fecha | date }}  [ {{ tiempo.maquina }} - {{ tiempo.nombremaq }} ]</b></h3>
                         <h3 style="font-weight: bold;" color="primary">Facilitador: {{ tiempo.nombrefac }}</h3>
+                        <p>Turno : {{ tiempo.turno === 'N' ? 'Noche' : 'Dia' }}</p>
                         <p>Desde : {{ tiempo.horadesde }} - Hasta : {{ tiempo.horahasta }}</p>
                         <p>Operador : {{ tiempo.nombreoper }}</p>
-                        <p *ngIf="tiempo.ayudante1 !== null ">Ayudante-1 : {{ tiempo.nombreayu1 }}</p>
-                        <p *ngIf="tiempo.ayudante2 !== null ">Ayudante-2 : {{ tiempo.nombreayu2 }}</p>
+                        <p *ngIf="tiempo.ayudante1 !== null && tiempo.ayudante1 !== '' ">Ayudante-1 : {{ tiempo.nombreayu1 }}</p>
+                        <p *ngIf="tiempo.ayudante2 !== null && tiempo.ayudante2 !== '' ">Ayudante-2 : {{ tiempo.nombreayu2 }}</p>
                         <p class="ion-text-wrap">Descripción: {{ tiempo.descripcion }}</p>
                     </ion-label>
                 </ion-item>

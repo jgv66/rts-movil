@@ -13,9 +13,13 @@ const routes: Routes = [
   { path: 'defmaquinas',    loadChildren: () => import('./pages/defmaquinas/defmaquinas.module').then( m => m.DefmaquinasPageModule) },
   { path: 'defmaquinasdef', loadChildren: () => import('./pages/defmaquinasdef/defmaquinasdef.module').then( m => m.DefmaquinasdefPageModule) },
   { path: 'defoperarios',   loadChildren: () => import('./pages/defoperarios/defoperarios.module').then( m => m.DefoperariosPageModule) },
-  { path: 'defoperario',    loadChildren: () => import('./pages/defoperario/defoperario.module').then( m => m.DefoperarioPageModule) },
   { path: 'defoperaciones', loadChildren: () => import('./pages/defoperaciones/defoperaciones.module').then( m => m.DefoperacionesPageModule) },
-  { path: '',               redirectTo: 'home',  pathMatch: 'full' },
+  { path: 'defestatus',     loadChildren: () => import('./pages/defestatus/defestatus.module').then( m => m.DefestatusPageModule) },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'addof',
+    loadChildren: () => import('./pages/addof/addof.module').then( m => m.AddofPageModule)
+  },
 ];
 
 @NgModule({

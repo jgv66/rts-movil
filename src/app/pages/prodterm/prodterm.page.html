@@ -1,9 +1,37 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>prodterm</ion-title>
-    </ion-toolbar>
-</ion-header>
+<app-hd titulo="Productos Términados" (clickPost)="salir()"></app-hd>
 
-<ion-content>
+<ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+<ion-content class="animated fadeIn">
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Tire para refrescar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-card class="welcome-card">
+        <img src="assets/imgs/terminados.png" alt="x1">
+    </ion-card>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let ter of terminados; let i = index;">
+                <ion-item detail (click)="tratOperario( false, ter )">
+                    <ion-avatar slot="start">
+                        <img src="assets/imgs/terminado.png">
+                    </ion-avatar>
+                    <ion-label>
+                        <h2 style="font-weight: bold; color: red"><b>{{ ter.operario }}</b></h2>
+                        <h3 style="font-weight: bold;" color="primary">{{ ter.nombre }}</h3>
+                        <p>Estado : {{ ter.activo ? 'Activo' : 'NO ACTIVO' }}</p>
+                        <p>Género : {{ ter.genero === 'F' ? 'Mujer' : 'Hombre' }}</p>
+                        <p>Ingreso : {{ ter.ingreso | date }}</p>
+                        <p>Clasificación : {{ ter.esmaestro === true ? 'Maestro' : 'Ayudante' }}</p>
+                        <p *ngIf=" ter.esmecanico === true ">Especialidad : Mecánico</p>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 
 </ion-content>

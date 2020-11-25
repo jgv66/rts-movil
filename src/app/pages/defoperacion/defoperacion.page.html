@@ -1,0 +1,51 @@
+<div *ngIf=" crear === true ">
+    <app-hd titulo="Mantención de Operaciones" (clickPost)="salir()"></app-hd>
+</div>
+<div *ngIf=" crear === false ">
+    <app-hd titulo="Mantención de Operarios" (clickPost)="salir()" (deletePost)="borrarOperacion()"></app-hd>
+</div>
+
+<ion-content>
+    <form>
+        <!--  -->
+        <ion-card>
+            <img src="assets/imgs/operaciones.png" alt="x1">
+        </ion-card>
+        <ion-list>
+            <ion-list-header *ngIf=" crear !== true ">
+                <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;">
+                    <b>{{ oper.proceso }}</b>
+                </h2>
+            </ion-list-header>
+            <ion-list-header *ngIf=" crear === true ">
+                <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;">
+                    <b>NUEVA OPERACION</b>
+                </h2>
+            </ion-list-header>
+        </ion-list>
+        <!--  -->
+        <ion-grid>
+            <ion-row>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12" *ngIf=" crear === true ">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:100px;">Operación</ion-label>
+                        <ion-input type="text" name="proceso" [(ngModel)]="proceso"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:100px;">Nombre</ion-label>
+                        <ion-input type="text" name="descripcion" [(ngModel)]="descripcion"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+            <ion-button (click)="actualizar()" expand="block" color="primary" style="margin-top: 25px; margin-bottom: 25px">
+                <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                {{ ( crear === true ) ? 'Crear' : 'Actualizar' }}
+            </ion-button>
+        </ion-grid>
+    </form>
+
+</ion-content>

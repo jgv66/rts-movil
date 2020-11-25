@@ -4,13 +4,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { HeaderComponent } from './header/header.component';
 import { HdComponent } from './hd/hd.component';
+import { DrawerComponent } from './drawer/drawer.component';
 
 @NgModule({
   declarations: [
-    HeaderComponent, HdComponent
+    HeaderComponent, HdComponent, DrawerComponent
   ],
   exports: [
-    HeaderComponent, HdComponent
+    HeaderComponent, HdComponent, DrawerComponent
   ],
   imports: [
     CommonModule,

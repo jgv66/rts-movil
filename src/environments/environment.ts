@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  URL:  'http://23.239.29.171:3012',  /* servidor linode mio */
+  URL: 'http://clientes.kinetik.cl:3012'
+  // URL:  'http://23.239.29.171:3012',  /* servidor linode mio */
 };
 
 /*

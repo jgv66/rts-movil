@@ -8,14 +8,18 @@ import { TmlPageRoutingModule } from './tml-routing.module';
 
 import { TmlPage } from './tml.page';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { TmldetPage } from '../tmldet/tmldet.page';
+import { TmldetPageModule } from '../tmldet/tmldet.module';
 
 @NgModule({
+  entryComponents: [ TmldetPage],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     TmlPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    TmldetPageModule
   ],
   declarations: [TmlPage]
 })

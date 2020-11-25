@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ProdtermPageRoutingModule } from './prodterm-routing.module';
 
 import { ProdtermPage } from './prodterm.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ProdtermPageRoutingModule
+    ProdtermPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [ProdtermPage]
 })

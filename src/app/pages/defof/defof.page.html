@@ -1,5 +1,40 @@
-<app-hd titulo="Orden de Fabricación" (clickPost)="salir()"></app-hd>
+<app-hd titulo="Orden de Fabricación" (clickPost)="salir()" (addPost)="agregarOF()"></app-hd>
 
-<ion-content>
+<ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+<ion-content class="animated fadeIn">
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Tire para refrescar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-card class="welcome-card">
+        <img src="assets/imgs/ordendefab.png" alt="x1">
+    </ion-card>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let orden of ordenes; let i = index;">
+                <ion-item detail (click)="tratOrdenes( false, ordenes )">
+                    <ion-label>
+                        <h3 style="font-weight: bold; color: red"><b>{{ orden.fecha | date }}  [ {{ orden.maquina }} - {{ orden.nombremaq }} ]</b></h3>
+                        <h3 style="font-weight: bold;" color="primary">Facilitador: {{ orden.nombrefac }}</h3>
+                        <p>Turno : {{ orden.turno === 'N' ? 'Noche' : 'Dia' }}</p>
+                        <p>Desde : {{ orden.horadesde }} - Hasta : {{ orden.horahasta }}</p>
+                        <p>Operador : {{ orden.nombreoper }}</p>
+                        <p *ngIf="orden.ayudante1 !== null && orden.ayudante1 !== '' ">Ayudante-1 : {{ orden.nombreayu1 }}</p>
+                        <p *ngIf="orden.ayudante2 !== null && orden.ayudante2 !== '' ">Ayudante-2 : {{ orden.nombreayu2 }}</p>
+                        <p class="ion-text-wrap">Descripción: {{ orden.descripcion }}</p>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <!-- <div class="backdrop" [ngClass]="backdropVisible ? 'fade-in' : 'fade'" tappable (click)="drawer.toggleDrawer()"></div> -->
+    <!-- <ion-button (click)="drawer.toggleDrawer()" expand="full">Open the drawer!</ion-button> -->
 
 </ion-content>
+
+<!-- <app-drawer (openStateChanged)="toggleBackdrop($event)" #drawer></app-drawer> -->

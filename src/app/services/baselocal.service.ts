@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Usuario, Cliente } from '../models/modelos.modelo';
 import { Plugins } from '@capacitor/core';
+import { NetworkengineService } from './networkengine.service';
+import { FuncionesService } from './funciones.service';
 
 const { Storage } = Plugins;
 
@@ -12,8 +14,12 @@ export class BaselocalService {
   user: Usuario;
   cliente: Cliente;
   logeado = false;
+  //
+  operarios = [];
+  mecanicos = [];
+  maquinas = [];
 
-  constructor() {
+  constructor( private netWork: NetworkengineService ) {
     console.log('<<< BaseLocalProvider >>>');
     this.inicializaTodo();
   }
@@ -53,6 +59,49 @@ export class BaselocalService {
     const user = JSON.parse( ret.value );
     this.user = ( user ? user : null );
     return this.user;
+  }
+
+  getMaquinas() {
+    this.netWork.comWithServer('maquinas', { accion: 'select', idusuario: this.user.id } )
+      .subscribe( (data: any) => {
+        //
+        console.log(data);
+        //
+        try {
+          if ( data.resultado !== 'ok' || data.datos.length === 0 ) {
+              // this.funciones.msgAlertErr('No existen máquinas definidas.' );
+          } else {
+            this.maquinas = data.datos;
+          }
+        } catch (err) {
+          // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+        }
+      },
+      err => {
+        // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+      });
+  }
+
+  getOperarios() {
+    this.netWork.comWithServer('operarios', { accion: 'select', idusuario: this.user.id } )
+      .subscribe( (data: any) => {
+        //
+        // console.log(data);
+        //
+        try {
+          if ( data.resultado !== 'ok' || data.datos.length === 0 ) {
+              // this.funciones.msgAlertErr('No existen máquinas definidas.' );
+          } else {
+            this.operarios = data.datos;
+            this.mecanicos = data.datos.filter( element => element.esmecanico === true );
+          }
+        } catch (err) {
+          // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+        }
+      },
+      err => {
+        // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+      });
   }
 
 }

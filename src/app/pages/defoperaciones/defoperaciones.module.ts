@@ -8,14 +8,18 @@ import { DefoperacionesPageRoutingModule } from './defoperaciones-routing.module
 
 import { DefoperacionesPage } from './defoperaciones.page';
 import { ComponentsModule } from '../../components/components.module';
+import { DefoperacionPage } from '../defoperacion/defoperacion.page';
+import { DefoperacionPageModule } from '../defoperacion/defoperacion.module';
 
 @NgModule({
+  entryComponents: [ DefoperacionPage ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     DefoperacionesPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    DefoperacionPageModule
   ],
   declarations: [DefoperacionesPage]
 })

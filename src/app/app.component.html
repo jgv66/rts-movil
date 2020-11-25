@@ -9,13 +9,18 @@
         <ion-content>
             <ion-list mode="ios">
                 <ion-menu-toggle>
+                    <!--  -->
+                    <ion-list-header style="margin-top: 10px;">
+                        <ion-label>Asignaciones</ion-label>
+                    </ion-list-header>
+                    <ion-item routerLink="/defof" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="settings-outline" slot="start"></ion-icon>
+                        <ion-label>Orden de Fabricación</ion-label>
+                    </ion-item>
+                    <!--  -->
                     <ion-list-header>
                         <ion-label>Operaciones</ion-label>
                     </ion-list-header>
-                    <ion-item routerLink="/produccion" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
-                        <ion-icon name="sunny-outline" slot="start"></ion-icon>
-                        <ion-label>Control de producción</ion-label>
-                    </ion-item>
                     <ion-item routerLink="/prodterm" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
                         <ion-icon name="pizza-outline" slot="start"></ion-icon>
                         <ion-label>Productos terminados</ion-label>
@@ -24,15 +29,7 @@
                         <ion-icon name="thunderstorm-outline" slot="start"></ion-icon>
                         <ion-label>TML por máquina</ion-label>
                     </ion-item>
-
-                    <ion-list-header style="margin-top: 10px;">
-                        <ion-label>Asignaciones</ion-label>
-                    </ion-list-header>
-                    <ion-item routerLink="/defof" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
-                        <ion-icon name="settings-outline" slot="start"></ion-icon>
-                        <ion-label>Orden de Fabricación</ion-label>
-                    </ion-item>
-
+                    <!--  -->
                     <ion-list-header style="margin-top: 10px;">
                         <ion-label>Definiciones</ion-label>
                     </ion-list-header>
@@ -52,7 +49,7 @@
                         <ion-icon name="bug-outline" slot="start"></ion-icon>
                         <ion-label>Estatus</ion-label>
                     </ion-item>
-
+                    <!--  -->
                     <ion-list-header style="margin-top: 10px;">
                         <ion-label>Reportes</ion-label>
                     </ion-list-header>
@@ -64,6 +61,7 @@
                         <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
                         <ion-label>Avance por máquina</ion-label>
                     </ion-item>
+                    <!--  -->
                 </ion-menu-toggle>
             </ion-list>
         </ion-content>

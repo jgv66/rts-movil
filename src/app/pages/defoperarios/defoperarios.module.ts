@@ -8,14 +8,18 @@ import { DefoperariosPageRoutingModule } from './defoperarios-routing.module';
 
 import { DefoperariosPage } from './defoperarios.page';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { DefoperarioPage } from '../defoperario/defoperario.page';
+import { DefoperarioPageModule } from '../defoperario/defoperario.module';
 
 @NgModule({
+  entryComponents: [DefoperarioPage],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     DefoperariosPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    DefoperarioPageModule
   ],
   declarations: [DefoperariosPage]
 })

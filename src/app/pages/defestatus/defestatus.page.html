@@ -1,0 +1,31 @@
+<app-hd titulo="Estatus" (clickPost)="salir()" (addPost)="tratEstatus( true )">
+
+</app-hd>
+
+<ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+<ion-content class="animated fadeIn">
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Tire para refrescar" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-card class="welcome-card">
+        <img src="assets/imgs/estatus.png" alt="x1">
+    </ion-card>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let stat of estatus; let i = index;">
+                <ion-item detail (click)="tratEstatus( false, stat )">
+                    <ion-label>
+                        <h2 style="font-weight: bold; color: red"><b>{{ stat.estatus }}</b></h2>
+                        <h3 style="font-weight: bold;" color="primary">{{ stat.descripcion }}</h3>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

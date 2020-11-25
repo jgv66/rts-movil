@@ -27,6 +27,8 @@ export class TmlPage implements OnInit {
       this.router.navigate(['/home']);
     }
     this.cargaTML();
+    this.datos.getMaquinas();
+    this.datos.getOperarios();
   }
 
   salir() {
@@ -67,7 +69,8 @@ export class TmlPage implements OnInit {
     // console.log(crear, operario);
     const modal = await this.modalCtrl.create({
       component: TmldetPage,
-      componentProps: { crear, fecha: tiempo.fecha }
+      componentProps: { crear, tiempo },
+      // cssClass: 'miModal'
     });
     await modal.present();
     // el retorno

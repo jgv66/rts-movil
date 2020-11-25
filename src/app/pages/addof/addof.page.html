@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button (click)="salir()">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title><b>Agregar Nota de Venta</b></ion-title>
+    </ion-toolbar>
+    <ion-grid>
+        <ion-row style="max-height: 42px;margin-top:10px;">
+            <ion-col size="9" style="max-height: 40px;top:-14px;">
+                <ion-searchbar class="buscar" mode="ios" animated="true" search-icon="x" type="text" name="nvv" [(ngModel)]="nvv" showCancelButton="focus" cancelButtonText=" " placeholder="Número de Nota de Venta..."></ion-searchbar>
+            </ion-col>
+            <ion-col size="3" style="height: 32px; padding-top: 0px;">
+                <ion-button size="small" expand="block" (click)="aBuscarNotaDeVenta()" style="height:32px;">
+                    Buscar
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-header>
+
+<ion-content class="animated fadeIn">
+    <ion-list>
+        <ion-item *ngFor="let nv of notas">
+            <ion-grid style="margin-top: 25px;">
+                <ion-row>
+                    <ion-col size-lg="5" size="12">
+                        <ion-label>
+                            <h3>Nro. de Folio : <b>{{ nv.folio }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="7" size="12">
+                        <ion-label>
+                            <h3>Razon Soc.: <b>{{ nv.razonsocial }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="5" size="12">
+                        <ion-label>
+                            <h3>Fecha Emisión: <b>{{ nv.fechaemision }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="7" size="12">
+                        <ion-label>
+                            <h3>Fecha Prometida : <b>{{ nv.fechaprometida }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="5" size="12">
+                        <ion-label>
+                            <h3>Orden de Compra: <b>{{ nv.oc }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="7" size="12">
+                        <ion-label>
+                            <h3>Vendedor : <b>{{ nv.nombrevend }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="5" size="12">
+                        <ion-label>
+                            <h3>Código : <b>{{ nv.codigo }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size-lg="7" size="12">
+                        <ion-label>
+                            <h3>Cantidad : <b>{{ nv.cantidad | number:"1.0-0" }}</b> {{ nv.um }}</h3>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col size="12">
+                        <ion-label class="ion-text-wrap">
+                            <h3>Descripción: <b>{{ nv.descripcion }}</b></h3>
+                        </ion-label>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="12">
+                        <ion-button (click)="trasladar(nv)" expand="block" color="primary" style="margin-top:15px; margin-bottom:15px">
+                            <ion-icon slot="start" name="arrow-undo-outline"></ion-icon>
+                            Trasladar como Orden de Fabricación
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item>
+    </ion-list>
+</ion-content>
