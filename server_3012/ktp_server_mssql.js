@@ -32,17 +32,15 @@ app.get('/ping',
 // --------------------------------------------ordenes
 app.post('/ordenes',
     function(req, res) {
-        //        
-        console.log('/ordenes', req.body);
         //
-        var tm;
+        var orden;
         var query = '';
         try {
-            tm = JSON.parse(req.body.datos);
+            orden = JSON.parse(req.body.datos);
         } catch (error) {
-            tm = undefined;
+            orden = undefined;
         }
-        console.log('/ordenes', tm);
+        console.log('/ordenes', orden);
         //
         if (req.body.accion === 'select') {
             query = `
@@ -63,10 +61,44 @@ app.post('/ordenes',
             left join ktb_operarios     as a1 with (nolock) on a1.operario=t.ayudante1
             left join ktb_operarios     as a2 with (nolock) on a2.operario=t.ayudante2
             left join ktb_ordendefabobs as ob with (nolock) on ob.id_ordendefab=t.id
-            order by t.fecha desc;
+            order by t.fechacreacion desc;
             `;
         } else if (req.body.accion === 'insert') {
-            query = ``;
+            //
+            const nv = orden.nvv;
+            //
+            query = `
+            declare @id int = 0;
+            begin try
+                if not exists ( select * from [dbo].[ktb_ordendefab] where ordendefab = '${ nv.folio }' ) begin
+                    --
+                    insert into [dbo].[ktb_ordendefab] ( estado,facilitador,vistobueno,fechacreacion,fechaemision,fechapromesa,turno
+                                                        ,ordendefab,cliente,codigo,impresion,qsolicitada,qproducida,maquina
+                                                        ,folio,maestro,ayudante1,ayudante2 )
+                            values ( 'INIT', ${ req.body.idusuario}, 0, getdate(), '${ nv.fechaemision }', '${ nv.fechaprometida }', '' 
+                                    ,'${nv.folio}', '${nv.cliente}', '${nv.codigo}', '', ${nv.cantidad}, 0, ''
+                                    ,'${nv.folio}','', '', '');
+                    --
+                    set @idfb = IDENT_CURRENT('ktb_ordendefab');
+                    if ( '${ nv.observaciones }' <> '' ) begin
+                        
+                    end;
+
+                    select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;
+                end
+                else begin
+                    select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Nota de venta ya fue trasladada con Orden de Fabricación' as  mensaje;
+                end ;
+            end try
+            begin catch
+                --
+                declare @Error	nvarchar(250)  = @@ERROR, 
+                        @ErrMsg	nvarchar(2048) = ERROR_MESSAGE(); 
+                --
+                select cast(0 as bit) as resultado, cast(1 as bit) as error, @ErrMsg as  mensaje;
+                --
+            end catch;
+            `;
         } else if (req.body.accion === 'update') {
             query = ``;
         } else if (req.body.accion === 'delete') {
@@ -110,8 +142,8 @@ app.post('/ordenesSoft',
             query = `
             select	top 100 
                     nv.NVNumero as folio
-                    ,convert(varchar, nv.nvFem, 103)  fechaemision
-                    ,convert(varchar, nv.nvFeEnt, 103) fechaprometida
+                    ,nv.nvFem as fechaemision
+                    ,nv.nvFeEnt as fechaprometida
                     ,nv.CodAux as cliente,cli.NomAux as razonsocial
                     ,nv.VenCod as vendedor,ve.VenDes as nombrevend
                     ,nv.nvObser as observaciones

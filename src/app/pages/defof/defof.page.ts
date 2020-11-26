@@ -16,7 +16,6 @@ export class DefofPage implements OnInit {
 
   buscando = false;
   ordenes = [];
-  backdropVisible = false;
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
                private router: Router,
@@ -24,11 +23,6 @@ export class DefofPage implements OnInit {
                private netWork: NetworkengineService,
                private funciones: FuncionesService,
                private modalCtrl: ModalController ) { }
-
-  toggleBackdrop(isVisible) {
-    this.backdropVisible = isVisible;
-    this.changeDetectorRef.detectChanges();
-  }
 
   ngOnInit() {
     if ( this.datos.user.id === 0 || this.datos.user.id === undefined ) {
@@ -45,15 +39,26 @@ export class DefofPage implements OnInit {
     this.cargaOrdenes( event );
   }
 
+  async agregarOF() {
+    const modal = await this.modalCtrl.create({
+      component: AddofPage,
+      componentProps: { facilitador: this.datos.user.id }
+    });
+    await modal.present();
+    //
+    const { data } = await modal.onWillDismiss();
+    if ( data ) {
+      this.cargaOrdenes();
+    }
+  }
+
   cargaOrdenes( event? ) {
-    let i = 0;
     this.buscando = true;
     this.netWork.comWithServer('ordenes', { accion: 'select', idusuario: this.datos.user.id } )
       .subscribe( (data: any) => {
         //
-
         this.buscando = false;
-        // console.log(data);
+        console.log(data);
         //
         try {
           if ( data.resultado !== 'ok' ) {
@@ -81,57 +86,12 @@ export class DefofPage implements OnInit {
       componentProps: { crear, orden }
     });
     await modal.present();
-    // el retorno
+    //
     const { data } = await modal.onWillDismiss();
     if ( data ) {
-      // console.log(data);
       this.cargaOrdenes();
     }
   }
 
-  async agregarOF() {
-    const modal = await this.modalCtrl.create({
-      component: AddofPage
-    });
-    await modal.present();
-    // el retorno
-    const { data } = await modal.onWillDismiss();
-    if ( data ) {
-      console.log(data);
-      this.insertar( data );
-    }
-  }
-
-  insertar( nvv ) {
-    //
-    const data = {
-      accion: 'insert',
-      nvv
-    };
-    // console.log('efecto', movimiento, data);
-    this.buscando = true;
-    this.netWork.comWithServer('procesos',
-                               { accion: 'insert',
-                                 idusuario: this.datos.user.id,
-                                 datos: JSON.stringify(data) } )
-      .subscribe( (resp: any) => {
-        //
-        this.buscando = false;
-        //
-        try {
-          if ( resp.resultado !== 'ok' ) {
-            this.funciones.msgAlertErr('Ocurrió un error al intentar grabar. ' + resp.datos );
-          } else {
-            this.funciones.muestraySale( 'Solicitud exitosa.', 1, 'middle' );
-            this.modalCtrl.dismiss({resultado: 'ok' });
-          }
-        } catch (err) {
-          this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
-        }
-      },
-      err  => {
-        this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
-      });
-  }
 
 }

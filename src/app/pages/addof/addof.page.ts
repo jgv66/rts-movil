@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { FuncionesService } from '../../services/funciones.service';
 import { NetworkengineService } from '../../services/networkengine.service';
@@ -11,7 +11,7 @@ import { BaselocalService } from '../../services/baselocal.service';
 })
 export class AddofPage {
 
-  buscando = false;
+  agregando = false;
   notas = [];
   nvv = '';
 
@@ -27,7 +27,7 @@ export class AddofPage {
 
   aBuscarNotaDeVenta( event ) {
     //
-    this.buscando = true;
+    this.agregando = true;
     this.netWork.comWithServer('ordenesSoft',
                                { accion: 'select',
                                  idusuario: this.datos.user.id,
@@ -35,7 +35,7 @@ export class AddofPage {
                                } )
       .subscribe( (data: any) => {
         //
-        this.buscando = false;
+        this.agregando = false;
         console.log(data);
         //
         try {
@@ -58,7 +58,39 @@ export class AddofPage {
       });
   }
 
-  trasladar( nvv ) {
-    this.modalCtrl.dismiss({ nvv });
+  trasladar( data ) {
+    // this.modalCtrl.dismiss({ nvv });
+    this.agregando = false;
+    const dato = {
+      accion: 'insert',
+      nvv: data
+    };
+    //
+    this.agregando = true;
+    this.netWork.comWithServer('ordenes',
+                                { accion: 'insert',
+                                  idusuario: this.datos.user.id,
+                                  datos: JSON.stringify(dato) } )
+      .subscribe( (resp: any) => {
+        //
+        this.agregando = false;
+        //
+        try {
+          if ( resp.resultado !== true ) {
+            this.funciones.msgAlertErr('Ocurrió un error al intentar grabar. ' + resp.datos );
+          } else {
+            this.funciones.muestraySale( 'Ingresada correctamente', 1, 'middle' );
+            this.nvv = undefined;
+            // this.modalCtrl.dismiss({resultado: 'ok' });
+          }
+        } catch (err) {
+          this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+        }
+      },
+      err  => {
+        this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+      });
   }
+
 }
+
