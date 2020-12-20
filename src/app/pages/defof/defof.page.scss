@@ -16,3 +16,16 @@
     transition: 0.5s linear all;
     opacity: 1;
 }
+
+.welcome-card {
+    display: block;
+    width: 100%;
+}
+
+.normal {
+    font-size: medium;
+}
+
+.cajita {
+    --ion-background-color: #afca0a;
+}

@@ -1,9 +1,95 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>defofdet</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-hd [titulo]="titulo" (clickPost)="salir()"></app-hd>
 
 <ion-content>
+
+    <form>
+        <!-- -->
+        <ion-card>
+            <img src="assets/imgs/defofdet.png" alt="x1">
+        </ion-card>
+        <ion-list>
+            <ion-list-header>
+                <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;text-align: center;">
+                    <b>Definir procesos y operadores</b>
+                </h2>
+            </ion-list-header>
+        </ion-list>
+        <!--  -->
+        <ion-grid style="margin-top: -20px;">
+            <ion-row style="line-height:35px;">
+                <ion-col size="12">
+                    <ion-item lines="none" style="line-height:35px;">
+                        <ion-label>
+                            <h2><b>Código : {{ orden.codigo }}</b></h2>
+                            <h3><b>{{ orden.descripcion }}</b></h3>
+                            <p>{{ orden.razonsocial }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:130px;">Máquina</ion-label>
+                        <ion-select class="maquina" slot="end" type="text" [value]="nombremaq" name="maquina" [(ngModel)]="maquina" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let maq of datos.maquinas" [value]="maq.maquina">{{ maq.descripcion }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:140px;">Maestro</ion-label>
+                        <ion-select class="operador" slot="end" type="text" [value]="nombremae" name="maestro" [(ngModel)]="maestro" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let ope of datos.operarios" [value]="ope.operario">{{ ope.nombre }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:140px;">Ayudante-1</ion-label>
+                        <ion-select class="ayudante" slot="end" type="text" [value]="nombreayu1" name="ayudante1" [(ngModel)]="ayudante1" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let ope of datos.operarios" [value]="ope.operario">{{ ope.nombre }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:140px;">Ayudante-2</ion-label>
+                        <ion-select class="ayudante" slot="end" type="text" [value]="nombreayu2" name="ayudante2" [(ngModel)]="ayudante2" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let ope of datos.operarios" [value]="ope.operario">{{ ope.nombre }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:135px;">Mecánico</ion-label>
+                        <ion-select class="mecanico" slot="end" type="text" [value]="nombremec" name="mecanico" [(ngModel)]="mecanico" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let mec of datos.mecanicos" [value]="mec.operario">{{ mec.nombre }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:135px;">Proceso</ion-label>
+                        <ion-select class="proceso" slot="end" type="text" [value]="nombrepro" name="proceso" [(ngModel)]="proceso" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let pro of datos.procesos" [value]="pro.proceso">{{ pro.descripcion }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+
+            </ion-row>
+
+            <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
+
+            <ion-button (click)="actualizar()" expand="block" color="primary" style="margin-top: 25px; margin-bottom: 25px">
+                <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                Actualizar
+            </ion-button>
+            <p style="font-size:80%;padding-top:0px;padding-left:10px;padding-right:10px;">
+                Al actualizar los datos de esta Orden de fabricación, se da por iniciado el proceso de fabricación en sí. Con esta actualización se cambia el estado de la órden a 'En Proceso'.
+            </p>
+
+        </ion-grid>
+    </form>
 
 </ion-content>

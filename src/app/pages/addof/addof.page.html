@@ -10,7 +10,7 @@
     <ion-grid>
         <ion-row style="max-height: 42px;margin-top:10px;">
             <ion-col size="9" style="max-height: 40px;top:-14px;">
-                <ion-searchbar class="buscar" mode="ios" animated="true" search-icon="x" type="text" name="nvv" [(ngModel)]="nvv" showCancelButton="focus" cancelButtonText=" " placeholder="Número de Nota de Venta..."></ion-searchbar>
+                <ion-searchbar class="buscar" mode="ios" animated="true" search-icon="x" type="text" name="nvv" [(ngModel)]="nvv" showCancelButton="focus" cancelButtonText=" " placeholder="Nro.Nota de Venta..."></ion-searchbar>
             </ion-col>
             <ion-col size="3" style="height: 32px; padding-top: 0px;">
                 <ion-button size="small" expand="block" (click)="aBuscarNotaDeVenta()" style="height:32px;">
@@ -20,6 +20,7 @@
         </ion-row>
     </ion-grid>
 </ion-header>
+<ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
 
 <ion-content class="animated fadeIn">
     <ion-list>

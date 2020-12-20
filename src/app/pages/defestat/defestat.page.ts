@@ -66,7 +66,7 @@ export class DefestatPage implements OnInit {
     //
     const data = {
       accion:      this.accion,
-      estatus:     ( this.crear === true ) ? this.estatus : this.oper.proceso,
+      estatus:     ( this.crear === true ) ? this.estatus : this.oper.estatus,
       descripcion: this.descripcion,
     };
     //

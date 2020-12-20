@@ -12,11 +12,11 @@ import { BaselocalService } from '../../services/baselocal.service';
 export class AddofPage {
 
   agregando = false;
+  buscando = false;
   notas = [];
   nvv = '';
 
   constructor(private modalCtrl: ModalController,
-              private alertCtrl: AlertController,
               private netWork: NetworkengineService,
               public datos: BaselocalService,
               private funciones: FuncionesService ) {}
@@ -27,7 +27,7 @@ export class AddofPage {
 
   aBuscarNotaDeVenta( event ) {
     //
-    this.agregando = true;
+    this.buscando = true;
     this.netWork.comWithServer('ordenesSoft',
                                { accion: 'select',
                                  idusuario: this.datos.user.id,
@@ -35,7 +35,7 @@ export class AddofPage {
                                } )
       .subscribe( (data: any) => {
         //
-        this.agregando = false;
+        this.buscando = false;
         console.log(data);
         //
         try {
@@ -43,12 +43,13 @@ export class AddofPage {
               this.funciones.msgAlertErr('No existen Órdenes de fabricación definidas.' );
           } else {
             //
-            this.notas = data.datos;
+            if (data.datos[0].yaexiste === true) {
+              this.funciones.msgAlertErr( 'Esta Nota de Venta ya existe como Órden de Fabricación en el sistema. Corrija y reintente.' );
+            } else {
+              this.notas = data.datos;
+            }
           }
           //
-          // if ( event !== undefined ) {
-          //   event.target.complete();
-          // }
         } catch (err) {
           this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
         }
@@ -59,7 +60,7 @@ export class AddofPage {
   }
 
   trasladar( data ) {
-    // this.modalCtrl.dismiss({ nvv });
+    //
     this.agregando = false;
     const dato = {
       accion: 'insert',
@@ -76,7 +77,7 @@ export class AddofPage {
         this.agregando = false;
         //
         try {
-          if ( resp.resultado !== true ) {
+          if ( resp.resultado !== 'ok' ) {
             this.funciones.msgAlertErr('Ocurrió un error al intentar grabar. ' + resp.datos );
           } else {
             this.funciones.muestraySale( 'Ingresada correctamente', 1, 'middle' );

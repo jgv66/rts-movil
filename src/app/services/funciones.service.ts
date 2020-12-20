@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, AlertController, ToastController } from '@ionic/angular';
+import { LoadingController, AlertController, ToastController, Platform } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
-
-import { Usuario, Cliente } from '../models/modelos.modelo';
-import { BaselocalService } from './baselocal.service';
-import { Subject, Observable } from 'rxjs';
 
 const { Storage } = Plugins;
 
@@ -15,10 +11,10 @@ export class FuncionesService {
 
   loader: any;
 
-  constructor(  private loadingCtrl: LoadingController,
+  constructor(  private platform: Platform,
+                private loadingCtrl: LoadingController,
                 private alertCtrl: AlertController,
-                private toastCtrl: ToastController,
-                private baseLocal: BaselocalService ) {}
+                private toastCtrl: ToastController ) {}
 
   textoSaludo() {
     const dia   = new Date();
@@ -84,6 +80,29 @@ export class FuncionesService {
       color: ( color ) ? color : 'danger'
     });
     toast.present();
+  }
+
+  /*| Platform Name   | Description                        |
+  * |-----------------|------------------------------------|
+  * | android         | on a device running Android.       |
+  * | cordova         | on a device running Cordova.       |
+  * | ios             | on a device running iOS.           |
+  * | ipad            | on an iPad device.                 |
+  * | iphone          | on an iPhone device.               |
+  * | phablet         | on a phablet device.               |
+  * | tablet          | on a tablet device.                |
+  * | electron        | in Electron on a desktop device.   |
+  * | pwa             | as a PWA app.                      |
+  * | mobile          | on a mobile device.                |
+  * | mobileweb       | on a mobile device in a browser.   |
+  * | desktop         | on a desktop device.               |
+  * | hybrid          | is a cordova or capacitor app.     |*/
+  soyGrande() {
+    if ( this.platform.is('ipad') || this.platform.is('tablet') ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

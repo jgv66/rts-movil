@@ -46,21 +46,34 @@ app.post('/ordenes',
             query = `
             select	top 100 
                     t.*
-                    ,f.nombre as nombrefac 
+                    ,f.nombre  as nombrefac 
                     ,vb.nombre as nombrevb 
-                    ,m.descripcion as nombremaq 
-                    ,o.nombre as nombremae
-                    ,a1.nombre as nombreayu1
-                    ,a2.nombre as nombreayu2
-                    ,ob.observaciones
-            from ktb_ordendefab         as t with (nolock)
-            left join ktb_usuarios      as f with (nolock) on f.id = t.facilitador
+                    ,ve.VenDes as nombrevend
+                    ,coalesce(m.descripcion,'') as nombremaq 
+                    ,coalesce(o.nombre,'')  as nombremae
+                    ,coalesce(a1.nombre,'') as nombreayu1
+                    ,coalesce(a2.nombre,'') as nombreayu2
+                    ,coalesce(me.nombre,'') as nombremec
+                    ,coalesce(ob.observaciones,'') as observaciones
+                    ,coalesce(nv.NumOC,'') as oc
+                    ,cli.NomAux as razonsocial
+                    ,det.DetProd as descripcion
+                    ,det.CodUMed as um
+                    ,coalesce(pr.descripcion,'') as nombreproc
+            from ktb_ordendefab         as t  with (nolock)
+            left join ktb_usuarios      as f  with (nolock) on f.id = t.facilitador
             left join ktb_usuarios      as vb with (nolock) on vb.id = t.vistobueno
-            left join ktb_maquinas      as m with (nolock) on m.maquina = t.maquina
-            left join ktb_operarios     as o with (nolock) on o.operario=t.maestro
+            left join ktb_maquinas      as m  with (nolock) on m.maquina = t.maquina
+            left join ktb_operarios     as o  with (nolock) on o.operario=t.maestro
             left join ktb_operarios     as a1 with (nolock) on a1.operario=t.ayudante1
             left join ktb_operarios     as a2 with (nolock) on a2.operario=t.ayudante2
+            left join ktb_operarios     as me with (nolock) on me.operario=t.mecanico
             left join ktb_ordendefabobs as ob with (nolock) on ob.id_ordendefab=t.id
+            left join ktb_procesos      as pr with (nolock) on pr.proceso=t.proceso1
+            left join RTS.softland.cwtauxi   as cli with (nolock) on cli.CodAux = t.cliente  collate database_default
+            left join RTS.softland.nw_nventa as nv  with (nolock) on nv.NVNumero = t.folio
+            left join RTS.softland.nw_detnv  as det with (nolock) on det.NVNumero = t.folio
+            left join RTS.softland.cwtvend   as ve  with (nolock) on ve.VenCod = t.vendedor  collate database_default
             order by t.fechacreacion desc;
             `;
         } else if (req.body.accion === 'insert') {
@@ -68,44 +81,93 @@ app.post('/ordenes',
             const nv = orden.nvv;
             //
             query = `
-            declare @id int = 0;
+            --
+            declare @Error	nvarchar(250), 
+                    @ErrMsg	nvarchar(2048), 
+                    @id int = 0,
+                    @idfb int = 0;
+            --
             begin try
                 if not exists ( select * from [dbo].[ktb_ordendefab] where ordendefab = '${ nv.folio }' ) begin
                     --
-                    insert into [dbo].[ktb_ordendefab] ( estado,facilitador,vistobueno,fechacreacion,fechaemision,fechapromesa,turno
-                                                        ,ordendefab,cliente,codigo,impresion,qsolicitada,qproducida,maquina
-                                                        ,folio,maestro,ayudante1,ayudante2 )
-                            values ( 'INIT', ${ req.body.idusuario}, 0, getdate(), '${ nv.fechaemision }', '${ nv.fechaprometida }', '' 
-                                    ,'${nv.folio}', '${nv.cliente}', '${nv.codigo}', '', ${nv.cantidad}, 0, ''
-                                    ,'${nv.folio}','', '', '');
+                    begin transaction;
+                        --
+                        insert into [dbo].[ktb_ordendefab] ( estado,facilitador,vistobueno,fechacreacion,fechaemision,fechaprometida,turno
+                                                            ,ordendefab,cliente,codigo,impresion,qsolicitada,qproducida,maquina
+                                                            ,folio,maestro,ayudante1,ayudante2,vendedor,oc )
+                                values ( 'A', ${ req.body.idusuario}, 0, getdate(), '${ nv.fechaemision }', '${ nv.fechaprometida }', '' 
+                                        ,'${nv.folio}', '${nv.cliente}', '${nv.codigo}', '', ${nv.cantidad}, 0, ''
+                                        ,'${nv.folio}','', '', '', '${nv.vendedor}','${nv.oc}');
+                        --
+                        set @idfb = IDENT_CURRENT('ktb_ordendefab');
+                        --
+                        if ( '${ nv.observaciones }' <> '' ) begin
+                            insert into [dbo].[ktb_ordendefabobs] (id_ordendefab,observaciones) values (@idfb,'${nv.observaciones}');
+                        end;
+                        --
+                    commit transaction;
                     --
-                    set @idfb = IDENT_CURRENT('ktb_ordendefab');
-                    if ( '${ nv.observaciones }' <> '' ) begin
-                        
-                    end;
-
                     select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;
                 end
                 else begin
-                    select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Nota de venta ya fue trasladada con Orden de Fabricación' as  mensaje;
+                    select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Nota de venta ya fue trasladada como Orden de Fabricación' as  mensaje;
                 end ;
             end try
             begin catch
                 --
-                declare @Error	nvarchar(250)  = @@ERROR, 
-                        @ErrMsg	nvarchar(2048) = ERROR_MESSAGE(); 
+                set @Error  = @@ERROR;
+                set @ErrMsg = ERROR_MESSAGE();
+                --
+                if (@@TRANCOUNT > 0 ) rollback transaction;
                 --
                 select cast(0 as bit) as resultado, cast(1 as bit) as error, @ErrMsg as  mensaje;
                 --
             end catch;
             `;
         } else if (req.body.accion === 'update') {
-            query = ``;
+            query = `
+                --
+                declare @Error	nvarchar(250), 
+                        @ErrMsg	nvarchar(2048); 
+                --
+                begin try
+                    begin transaction;
+                        update [dbo].[ktb_ordendefab]
+                        set maquina='${ orden.maquina }',
+                            maestro='${ orden.maestro }',
+                            ayudante1='${ orden.ayudante1 }',
+                            ayudante2='${ orden.ayudante2 }',
+                            mecanico='${ orden.mecanico }',
+                            proceso1='${ orden.proceso }',
+                            estado='P',
+                            fechaultact=getdate()
+                        where id =${ orden.id };
+                        --
+                        insert into [dbo].[ktb_ordendefabmov] (id_padre,fechamov,facilitador) 
+                        values ( ${orden.id}, getdate(), ${ orden.user } );
+                        --
+                    commit transaction ;
+                    --
+                    select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;
+                    --
+                end try
+                begin catch
+                    --
+                    set @Error  = @@ERROR;
+                    set @ErrMsg = ERROR_MESSAGE();
+                    --
+                    if (@@TRANCOUNT > 0 ) rollback transaction;
+                    --
+                    select cast(0 as bit) as resultado, cast(1 as bit) as error, @ErrMsg as  mensaje;
+                    --
+                end catch;
+                --
+            `;
         } else if (req.body.accion === 'delete') {
             query = ``;
         } else {
             query = `
-            select 'sin accion en tml' as error ;
+            select 'sin accion en ordenes' as error ;
             `;
         }
         //        
@@ -150,6 +212,7 @@ app.post('/ordenesSoft',
                     ,nv.NumOC as oc
                     ,det.CodProd as codigo,det.nvCant cantidad,det.CodUMed as um
                     ,det.DetProd as descripcion
+                    ,cast( coalesce((select top 1 1 from RTS_Kinetik.dbo.ktb_ordendefab as x where x.folio = ${ nv.nvv } ),0) as bit) as yaexiste
             from softland.nw_nventa as nv with (nolock)
             inner join softland.nw_detnv as det with (nolock) on det.NVNumero = nv.NVNumero
             left join softland.cwtvend as ve with (nolock) on ve.VenCod = nv.VenCod
@@ -185,8 +248,7 @@ app.post('/ordenesSoft',
                 res.json({ resultado: 'error', datos: err });
             });
     });
-
-// --------------------------------------------maquinas
+// -------------------------------------------maquinas
 app.post('/maquinas',
     function(req, res) {
         //        
@@ -369,7 +431,9 @@ app.post('/tml',
             `;
         } else if (req.body.accion === 'insert') {
             query = `
-                insert into [ktb_tml] (facilitador,fecha,turno,fecharegistro,maquina,horadesde,horahasta,operador,ayudante1,ayudante2,mecanico,descripcion) 
+                insert into [ktb_tml] (facilitador,fecha,turno,fecharegistro
+                                        ,maquina,horadesde,horahasta,operador
+                                        ,ayudante1,ayudante2,mecanico,descripcion) 
                 values (${ tm.facilitador },
                         '${ tm.fecha }',
                         '${ tm.turno }',
@@ -581,7 +645,7 @@ app.post('/estatus',
         } else if (req.body.accion === 'update') {
             query = `
             update [ktb_estatus] 
-            set descripcion='${ est.descripcion }',
+            set descripcion='${ est.descripcion }'
             where estatus='${ est.estatus }' ;
         `;
         } else if (req.body.accion === 'delete') {

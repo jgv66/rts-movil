@@ -70,7 +70,7 @@ export class TmlPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: TmldetPage,
       componentProps: { crear, tiempo },
-      // cssClass: 'miModal'
+      cssClass: ( this.funciones.soyGrande() === true ? 'mi-modal-mas-alto-css' : undefined ),
     });
     await modal.present();
     // el retorno

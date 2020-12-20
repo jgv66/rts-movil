@@ -4,30 +4,30 @@
 
     <img src="assets/imgs/logo-001.png" alt="RTS" class="logo-001">
 
-    <!-- <p style="text-align: center; padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px;"> -->
     <h3 style="text-align: center; padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px;">Acceda con sus datos</h3>
-    <!-- </p> -->
 
-    <ion-grid fixed>
+    <ion-grid style="margin-top: -30px;">
         <ion-row>
             <ion-col ofsset-md="2"></ion-col>
             <ion-col size="12" size-xl="8" size-lg="8" size-md="8" size-sm="8" size-xs="12">
-                <ion-card class="ion-no-padding">
+                <ion-card class="ion-no-padding login-box">
                     <ion-list>
 
-                        <ion-item lines='none'>
-                            <ion-label position="floating">Correo electrónico</ion-label>
-                            <ion-input type="text" name="email" [(ngModel)]="email" required clearInput=true></ion-input>
+                        <ion-item lines='none' class="transp">
+                            <!-- <ion-label position="floating">Correo electrónico</ion-label> -->
+                            <ion-icon slot="start" name="mail-outline"></ion-icon>
+                            <ion-input type="text" name="email" [(ngModel)]="email" required clearInput=true placeholder="email..."></ion-input>
                         </ion-item>
 
-                        <ion-item lines='none'>
-                            <ion-label position="floating">Su clave...</ion-label>
-                            <ion-input type="password" name="clave" [(ngModel)]="clave" required clearInput=true></ion-input>
+                        <ion-item lines='none' class="transp">
+                            <!-- <ion-label position="floating">Su clave...</ion-label> -->
+                            <ion-icon slot="start" name="key-outline"></ion-icon>
+                            <ion-input type="password" name="clave" [(ngModel)]="clave" required clearInput=true placeholder="password"></ion-input>
                         </ion-item>
 
                         <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
 
-                        <ion-grid>
+                        <ion-grid style="margin-top: 25px;">
                             <ion-row>
                                 <ion-col size="4">
                                     <ion-button expand="block" size="small" (click)="salir()">Salir</ion-button>

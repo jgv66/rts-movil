@@ -11,23 +11,32 @@
                 <ion-menu-toggle>
                     <!--  -->
                     <ion-list-header style="margin-top: 10px;">
-                        <ion-label>Asignaciones</ion-label>
+                        <ion-label>Operaciones</ion-label>
                     </ion-list-header>
                     <ion-item routerLink="/defof" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
                         <ion-icon name="settings-outline" slot="start"></ion-icon>
                         <ion-label>Orden de Fabricación</ion-label>
                     </ion-item>
+                    <ion-item routerLink="/tml" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="thunderstorm-outline" slot="start"></ion-icon>
+                        <ion-label>TML por máquina</ion-label>
+                    </ion-item>
                     <!--  -->
-                    <ion-list-header>
-                        <ion-label>Operaciones</ion-label>
+                    <ion-list-header style="margin-top: 10px;">
+                        <ion-label>Reportes</ion-label>
                     </ion-list-header>
                     <ion-item routerLink="/prodterm" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
                         <ion-icon name="pizza-outline" slot="start"></ion-icon>
                         <ion-label>Productos terminados</ion-label>
                     </ion-item>
-                    <ion-item routerLink="/tml" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
-                        <ion-icon name="thunderstorm-outline" slot="start"></ion-icon>
-                        <ion-label>TML por máquina</ion-label>
+                    <!--  -->
+                    <ion-item routerLink="/rep" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="bulb-outline" slot="start"></ion-icon>
+                        <ion-label>Orden de Fabricación</ion-label>
+                    </ion-item>
+                    <ion-item routerLink="/rep" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+                        <ion-label>Avance por máquina</ion-label>
                     </ion-item>
                     <!--  -->
                     <ion-list-header style="margin-top: 10px;">
@@ -51,15 +60,19 @@
                     </ion-item>
                     <!--  -->
                     <ion-list-header style="margin-top: 10px;">
-                        <ion-label>Reportes</ion-label>
+                        <ion-label>Configuración</ion-label>
                     </ion-list-header>
-                    <ion-item routerLink="/rep" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
-                        <ion-icon name="bulb-outline" slot="start"></ion-icon>
-                        <ion-label>Orden de Fabricación</ion-label>
+                    <ion-item routerLink="/usuarios" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="person-outline" slot="start"></ion-icon>
+                        <ion-label>Usuarios</ion-label>
                     </ion-item>
-                    <ion-item routerLink="/rep" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
-                        <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
-                        <ion-label>Avance por máquina</ion-label>
+                    <!--  -->
+                    <ion-list-header style="margin-top: 10px;">
+                        <ion-label>Salir</ion-label>
+                    </ion-list-header>
+                    <ion-item (click)="logout()" routerDirection="root" routerLinkActive="active" [disabled]=" !datos.logeado ">
+                        <ion-icon name="exit-outline" slot="start"></ion-icon>
+                        <ion-label>Salir del Sistema</ion-label>
                     </ion-item>
                     <!--  -->
                 </ion-menu-toggle>

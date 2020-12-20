@@ -18,6 +18,7 @@ export class BaselocalService {
   operarios = [];
   mecanicos = [];
   maquinas = [];
+  procesos = [];
 
   constructor( private netWork: NetworkengineService ) {
     console.log('<<< BaseLocalProvider >>>');
@@ -94,6 +95,27 @@ export class BaselocalService {
           } else {
             this.operarios = data.datos;
             this.mecanicos = data.datos.filter( element => element.esmecanico === true );
+          }
+        } catch (err) {
+          // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+        }
+      },
+      err => {
+        // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );
+      });
+  }
+
+  getProcesos() {
+    this.netWork.comWithServer('procesos', { accion: 'select', idusuario: this.user.id } )
+      .subscribe( (data: any) => {
+        //
+        // console.log(data);
+        //
+        try {
+          if ( data.resultado !== 'ok' || data.datos.length === 0 ) {
+              // this.funciones.msgAlertErr('No existen máquinas definidas.' );
+          } else {
+            this.procesos = data.datos;
           }
         } catch (err) {
           // this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );

@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { DefofdetPageRoutingModule } from './defofdet-routing.module';
 
 import { DefofdetPage } from './defofdet.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DefofdetPageRoutingModule
+    DefofdetPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [DefofdetPage]
 })

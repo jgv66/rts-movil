@@ -1,4 +1,23 @@
-<app-hd titulo="Orden de Fabricación" (clickPost)="salir()" (addPost)="agregarOF()"></app-hd>
+<ion-header>
+    <ion-toolbar color="primary" style="max-height: 60px;">
+        <ion-buttons slot="start">
+            <ion-button (click)="salir()">
+                <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Orden de Fabricación</ion-title>
+        <ion-buttons slot="end" size="large" *ngIf=" segmento === 'A' ">
+            <ion-button (click)="agregarOF()">
+                <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-segment [(ngModel)]="segmento" value="A" class="cajita" scrollable mode="ios" class="scrollable-segments" (ionChange)="segmentChanged($event)">
+        <ion-segment-button style="background-color: primary;" *ngFor="let stat of status" [value]="stat.estatus">
+            <ion-label class="normal">{{ stat.descripcion }}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+</ion-header>
 
 <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
 
@@ -10,70 +29,130 @@
     </ion-refresher>
 
     <ion-card class="welcome-card">
-        <img src="assets/imgs/ordendefab.png" alt="x1">
+        <img src="assets/imgs/ordendefab.png" alt="imagen de procesos en fabrica">
     </ion-card>
 
-    <!-- <ion-grid>
-        <ion-row>
-            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12" *ngFor="let orden of ordenes; let i = index;">
-                <ion-item detail (click)="tratOrdenes( false, ordenes )">
-                    <ion-label>
-                        <h3 style="font-weight: bold; color: red"><b>{{ orden.folio }}  [ {{ orden.maquina }} - {{ orden.nombremaq }} ]</b></h3>
-                        <h3 style="font-weight: bold;" color="primary">Facilitador: {{ orden.nombrefac }}</h3>
-                        <p>Turno : {{ orden.turno === 'N' ? 'Noche' : ( orden.turno === 'D' ? 'Día' : 'n/d' ) }}</p>
-                        <p>Operador : {{ orden.nombreoper }}</p>
-                        <p *ngIf="orden.ayudante1 !== null && orden.ayudante1 !== '' ">Ayudante-1 : {{ orden.nombreayu1 }}</p>
-                        <p *ngIf="orden.ayudante2 !== null && orden.ayudante2 !== '' ">Ayudante-2 : {{ orden.nombreayu2 }}</p>
-                        <p class="ion-text-wrap">Descripción: {{ orden.descripcion }}</p>
-                    </ion-label>
-                </ion-item>
-            </ion-col>
-        </ion-row>
-    </ion-grid> -->
+    <div *ngIf=" ordenes.length >0 ">
+        <ion-list>
+            <ion-list-header mode="ios">
+                <ion-label style="margin-top: 5px;margin-bottom: 5px;">Ordenes {{ getNombre() }}
+                    <ion-badge color="primary">{{ getCasos() }}</ion-badge>
+                </ion-label>
+            </ion-list-header>
+            <ion-item *ngFor="let nv of ordenes | filtro:segmento:'estado'" detail (click)=" ( segmento === 'A' ) ? definirOF(nv) : undefined ">
+                <ion-grid style="margin-top: 25px;">
+                    <ion-row>
+                        <ion-col size-xl="3" size-lg="5" size-md="5" size="12">
+                            <ion-label color="danger">
+                                <h2 style="font-weight: bold; color: red"><b>Nro. de Folio : {{ nv.folio }}</b></h2>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="4" size-lg="7" size-md="7" size="12">
+                            <ion-label>
+                                <h3>Razon Soc.: <b>{{ nv.razonsocial }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="2" size-lg="5" size-md="5" size="12">
+                            <ion-label>
+                                <h3>Fecha Emisión: <b>{{ nv.fechaemision | date:"dd/MM/yyyy" }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="2" size-lg="7" size-md="7" size="12">
+                            <ion-label>
+                                <h3>Fecha Prometida : <b>{{ nv.fechaprometida | date:"dd/MM/yyyy"  }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="3" size-lg="5" size-md="5" size="12">
+                            <ion-label>
+                                <h3>Orden de Compra: <b>{{ nv.oc }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="4" size-lg="7" size-md="7" size="12">
+                            <ion-label>
+                                <h3>Vendedor : <b>{{ nv.nombrevend }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="5" size="12" *ngIf=" nv.observaciones !== '' ">
+                            <ion-label class="ion-text-wrap">
+                                <h3>Obs: <b>{{ nv.observaciones }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="3" size-lg="5" size-md="5" size="12">
+                            <ion-label>
+                                <h3>Código : <b>{{ nv.codigo }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="4" size-lg="7" size-md="7" size="12">
+                            <ion-label>
+                                <h3>Cantidad : <b>{{ nv.qsolicitada | number:"1.0-0" }}</b> {{ nv.um }}</h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="5" size="12">
+                            <ion-label class="ion-text-wrap">
+                                <h3>Descripción: <b>{{ nv.descripcion }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="3" size-lg="5" size-md="5" size-sm="5" size="12" *ngIf="nv.nombremaq !== ''">
+                            <ion-label>
+                                <h3>Máquina: <b>{{ nv.nombremaq }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="4" size-lg="7" size-md="7" size-sm="7" size="12" *ngIf="nv.nombremae !== ''">
+                            <ion-label>
+                                <h3>Maestro: <b>{{ nv.nombremae }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="2" size-lg="5" size-md="5" size-sm="5" size="12" *ngIf="nv.nombreayu1 !== ''">
+                            <ion-label>
+                                <h3>Ayudante-1: <b>{{ nv.nombreayu1 }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="2" size-lg="7" size-md="7" size-sm="7" size="12" *ngIf="nv.nombreayu2!== ''">
+                            <ion-label>
+                                <h3>Ayudante-2: <b>{{ nv.nombreayu2 }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="3" size-lg="5" size-md="5" size-sm="5" size="12" *ngIf="nv.nombremec!== ''">
+                            <ion-label>
+                                <h3>Mecánico <b>{{ nv.nombremec }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                        <ion-col size-xl="4" size-lg="7" size-md="7" size-sm="7" size="12" *ngIf="nv.nombreproc!== ''">
+                            <ion-label>
+                                <h3>Proceso: <b>{{ nv.nombreproc }}</b></h3>
+                            </ion-label>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf=" segmento === 'P' ">
+                        <ion-col size="3">
+                            <ion-button (click)="epCerrar(nv)" expand="block" color="success">
+                                <!-- <ion-icon slot="start" name="pizza-outline"></ion-icon> -->
+                                Cerrar
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="3">
+                            <ion-button (click)="epDetener(nv)" expand="block" color="dark">
+                                <!-- <ion-icon slot="start" name="hand-left-outline"></ion-icon> -->
+                                Detener
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="4">
+                            <ion-button (click)="epMasDatos(nv)" expand="block">
+                                <!-- <ion-icon slot="start" name="document-text-outline"></ion-icon> -->
+                                Procesar
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="2">
+                            <ion-button (click)="epMasDatos(nv)" expand="block">
+                                <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
 
-    <ion-list>
-        <ion-item *ngFor="let nv of ordenes">
-            <ion-grid style="margin-top: 25px; font-size: 90%;">
-                <ion-row>
-                    <ion-col size-lg="5" size-md="5" size="12">
-                        <ion-label>
-                            <h3 style="font-weight: bold; color: red">Nro. de OF: <b>{{ nv.folio }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size-lg="5" size-md="5" size="12">
-                        <ion-label>
-                            <h3>Fecha Emisión: <b>{{ nv.fechaemision | date:"dd/MM/yyyy" }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size-lg="7" size-md="7" size="12">
-                        <ion-label>
-                            <h3>Fecha Prometida : <b>{{ nv.fechaprometida | date:"dd/MM/yyyy"  }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size="12" *ngIf=" nv.observaciones !== '' ">
-                        <ion-label class="ion-text-wrap">
-                            <h3>Obs: <b>{{ nv.observaciones }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size-lg="5" size-md="5" size="12">
-                        <ion-label>
-                            <h3>Código : <b>{{ nv.codigo }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size-lg="7" size-md="7" size="12">
-                        <ion-label>
-                            <h3>Cantidad : <b>{{ nv.cantidad | number:"1.0-0" }}</b> {{ nv.um }}</h3>
-                        </ion-label>
-                    </ion-col>
-                    <ion-col size="12">
-                        <ion-label class="ion-text-wrap">
-                            <h3>Descripción: <b>{{ nv.descripcion }}</b></h3>
-                        </ion-label>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </ion-item>
-    </ion-list>
+                </ion-grid>
 
+            </ion-item>
+        </ion-list>
+    </div>
 
 </ion-content>
