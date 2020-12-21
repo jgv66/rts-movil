@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { FuncionesService } from '../../services/funciones.service';
 import { NetworkengineService } from '../../services/networkengine.service';
 import { BaselocalService } from '../../services/baselocal.service';
@@ -82,7 +82,7 @@ export class AddofPage {
           } else {
             this.funciones.muestraySale( 'Ingresada correctamente', 1, 'middle' );
             this.nvv = undefined;
-            // this.modalCtrl.dismiss({resultado: 'ok' });
+            this.modalCtrl.dismiss({resultado: 'ok' });
           }
         } catch (err) {
           this.funciones.msgAlertErr( 'Ocurrió un error -> ' + err );

@@ -8,9 +8,9 @@
             <img src="assets/imgs/defofdet.png" alt="x1">
         </ion-card>
         <ion-list>
-            <ion-list-header>
+            <ion-list-header style="text-align: center;">
                 <h2 style="font-weight: bold; color: red; margin-top: 0px;margin-bottom: 10px;text-align: center;">
-                    <b>Definir procesos y operadores</b>
+                    <b>{{ titulo }}</b>
                 </h2>
             </ion-list-header>
         </ion-list>
@@ -28,6 +28,26 @@
                 </ion-col>
             </ion-row>
             <ion-row>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12" *ngIf=" opcion === 'P' ">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:200px;">Cantidad Producida</ion-label>
+                        <ion-input class="ion-text-right" type="number" value="cantidad" name="cantidad" [(ngModel)]="cantidad"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size-lg="6" size-md="6" size-sm="6" size="12" *ngIf=" opcion === 'P' ">
+                    <ion-item>
+                        <ion-label position="Fixed" style="max-width:135px;">Turno</ion-label>
+                        <ion-select class="turno" slot="end" type="text" [value]="nombretur" name="turno" [(ngModel)]="turno" mode="ios" interface="popover">
+                            <ion-select-option *ngFor="let tur of turnos" [value]="tur.turno">{{ tur.descripcion }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="12" *ngIf=" opcion === 'P' ">
+                    <ion-item>
+                        <ion-label position="stacked">Impresión</ion-label>
+                        <ion-textarea type="text" value="impresion" name="impresion" [(ngModel)]="impresion"></ion-textarea>
+                    </ion-item>
+                </ion-col>
                 <ion-col size-lg="6" size-md="6" size-sm="6" size="12">
                     <ion-item>
                         <ion-label position="Fixed" style="max-width:130px;">Máquina</ion-label>
@@ -76,7 +96,6 @@
                         </ion-select>
                     </ion-item>
                 </ion-col>
-
             </ion-row>
 
             <ion-progress-bar *ngIf=" buscando " type="indeterminate"></ion-progress-bar>
@@ -85,9 +104,6 @@
                 <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
                 Actualizar
             </ion-button>
-            <p style="font-size:80%;padding-top:0px;padding-left:10px;padding-right:10px;">
-                Al actualizar los datos de esta Orden de fabricación, se da por iniciado el proceso de fabricación en sí. Con esta actualización se cambia el estado de la órden a 'En Proceso'.
-            </p>
 
         </ion-grid>
     </form>

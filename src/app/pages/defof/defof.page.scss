@@ -29,3 +29,8 @@
 .cajita {
     --ion-background-color: #afca0a;
 }
+
+ion-segment-button {
+    --background-checked: var(--ion-color-success);
+    --color-checked: var(--ion-color-success-contrast);
+}

@@ -123,10 +123,14 @@ ion-button {
     }
 }
 
+.mi-alert-css .alert-wrapper {
+    background: #e5e5e5;
+}
+
 .mi-modal-mas-alto-css {
     --backdrop-opacity: 0.3 !important;
     .modal-wrapper {
-        --height: 90% !important;
+        --height: 85% !important;
         width: 90% !important;
         position: absolute;
         box-shadow: 0 16px 20px rgba(0, 0, 0, .4);

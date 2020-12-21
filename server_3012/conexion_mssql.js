@@ -5,7 +5,7 @@ module.exports = [{
         password: 'rtsknt2k21$!$!',
         port: 1433,
         database: 'RTS_Kinetik',
-        options: { encrypt: false }, // Use this if you're on Windows Azure
+        options: { encrypt: false, enableArithAbort: true }, // Use this if you're on Windows Azure
         pool: {
             max: 10,
             min: 0,
@@ -18,7 +18,7 @@ module.exports = [{
         password: 'rtsknt2k21$!$!',
         port: 1433,
         database: 'RTS',
-        options: { encrypt: false }, // Use this if you're on Windows Azure
+        options: { encrypt: false, enableArithAbort: true }, // Use this if you're on Windows Azure
         pool: {
             max: 10,
             min: 0,
@@ -33,7 +33,7 @@ module.exports = [{
         user: 'valencia',
         password: 'valencia$$$',
         database: 'valencia',
-        options: { encrypt: false },
+        options: { encrypt: false, enableArithAbort: true }, // Use this if you're on Windows Azure
         pool: {
             max: 10,
             min: 0,

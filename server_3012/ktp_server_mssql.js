@@ -40,7 +40,7 @@ app.post('/ordenes',
         } catch (error) {
             orden = undefined;
         }
-        console.log('/ordenes', orden);
+        console.log('/ordenes', orden, req.body);
         //
         if (req.body.accion === 'select') {
             query = `
@@ -60,6 +60,7 @@ app.post('/ordenes',
                     ,det.DetProd as descripcion
                     ,det.CodUMed as um
                     ,coalesce(pr.descripcion,'') as nombreproc
+                    ,coalesce(( select sum(qproducida) from ktb_ordendefabmov as mov with (nolock) where mov.id_padre = t.id ),0) as producido
             from ktb_ordendefab         as t  with (nolock)
             left join ktb_usuarios      as f  with (nolock) on f.id = t.facilitador
             left join ktb_usuarios      as vb with (nolock) on vb.id = t.vistobueno
@@ -69,7 +70,7 @@ app.post('/ordenes',
             left join ktb_operarios     as a2 with (nolock) on a2.operario=t.ayudante2
             left join ktb_operarios     as me with (nolock) on me.operario=t.mecanico
             left join ktb_ordendefabobs as ob with (nolock) on ob.id_ordendefab=t.id
-            left join ktb_procesos      as pr with (nolock) on pr.proceso=t.proceso1
+            left join ktb_procesos      as pr with (nolock) on pr.proceso=t.proceso
             left join RTS.softland.cwtauxi   as cli with (nolock) on cli.CodAux = t.cliente  collate database_default
             left join RTS.softland.nw_nventa as nv  with (nolock) on nv.NVNumero = t.folio
             left join RTS.softland.nw_detnv  as det with (nolock) on det.NVNumero = t.folio
@@ -126,6 +127,54 @@ app.post('/ordenes',
             `;
         } else if (req.body.accion === 'update') {
             query = `
+                -- solo cambia de activa a en proceso
+                declare @Error	nvarchar(250), 
+                        @ErrMsg	nvarchar(2048); 
+                --
+                begin try
+                    --
+                    begin transaction;
+                        --
+                        update [dbo].[ktb_ordendefab]
+                        set maquina='${ orden.maquina }',
+                            maestro='${ orden.maestro }',
+                            ayudante1='${ orden.ayudante1 }',
+                            ayudante2='${ orden.ayudante2 }',
+                            mecanico='${ orden.mecanico }',
+                            proceso='${ orden.proceso }',
+                            turno='${ orden.turno }',
+                            qproducida=${orden.cantidad},
+                            impresion='${orden.impresion}',
+                            estado='P',
+                            fechaultact=getdate()
+                        where id =${ orden.id };
+                        --
+                        insert into [dbo].[ktb_ordendefabmov] (id_padre,fechamov,facilitador,maquina,maestro,ayudante1,
+                                                               ayudante2,mecanico,proceso,turno,qproducida,
+                                                               impresion) 
+                        values ( ${orden.id}, getdate(), ${ orden.user },'${ orden.maquina }','${ orden.maestro }','${ orden.ayudante1 }'
+                                ,'${ orden.ayudante2 }','${ orden.mecanico }','${ orden.proceso }','${ orden.turno }',${orden.cantidad}
+                                ,'${orden.impresion}' );
+                        --
+                    commit transaction ;
+                    --
+                    select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;
+                    --
+                end try
+                begin catch
+                    --
+                    set @Error  = @@ERROR;
+                    set @ErrMsg = ERROR_MESSAGE();
+                    --
+                    if (@@TRANCOUNT > 0 ) rollback transaction;
+                    --
+                    select cast(0 as bit) as resultado, cast(1 as bit) as error, @ErrMsg as  mensaje;
+                    --
+                end catch;
+                --
+            `;
+        } else if (req.body.accion === 'cambiarestado') {
+            query = `
                 --
                 declare @Error	nvarchar(250), 
                         @ErrMsg	nvarchar(2048); 
@@ -133,13 +182,7 @@ app.post('/ordenes',
                 begin try
                     begin transaction;
                         update [dbo].[ktb_ordendefab]
-                        set maquina='${ orden.maquina }',
-                            maestro='${ orden.maestro }',
-                            ayudante1='${ orden.ayudante1 }',
-                            ayudante2='${ orden.ayudante2 }',
-                            mecanico='${ orden.mecanico }',
-                            proceso1='${ orden.proceso }',
-                            estado='P',
+                        set estado='${ orden.estado }',
                             fechaultact=getdate()
                         where id =${ orden.id };
                         --
@@ -163,8 +206,42 @@ app.post('/ordenes',
                 end catch;
                 --
             `;
-        } else if (req.body.accion === 'delete') {
-            query = ``;
+        } else if (req.body.accion === 'report') {
+            query = `
+            select	t.codigo
+                    ,det.DetProd as descripcion
+                    ,cast(mo.fechamov as date) as fecha
+					,cast(convert(time, mo.fechamov) as varchar(5) ) as hora
+					,( case when mo.turno = 'D' then 'Día' when mo.turno = 'N' then 'Noche' else '?' end ) as turno
+					,mo.qproducida as cantidad
+                    ,mo.impresion
+                    ,f.nombre  as nombrefac 
+                    ,coalesce(m.descripcion,'') as nombremaq 
+                    ,coalesce(o.nombre,'')  as nombremae
+                    ,coalesce(a1.nombre,'') as nombreayu1
+                    ,coalesce(a2.nombre,'') as nombreayu2
+                    ,coalesce(me.nombre,'') as nombremec
+                    ,coalesce(ob.observaciones,'') as observaciones
+                    ,det.CodUMed as um
+                    ,cli.NomAux as razonsocial
+                    ,coalesce(pr.descripcion,'') as nombreproc
+            from ktb_ordendefab          as t  with (nolock)
+			inner join ktb_ordendefabmov as mo with (nolock) on mo.id_padre = t.id 
+            left  join ktb_usuarios      as f  with (nolock) on f.id = mo.facilitador
+            left  join ktb_usuarios      as vb with (nolock) on vb.id = t.vistobueno
+            left  join ktb_maquinas      as m  with (nolock) on m.maquina = mo.maquina
+            left  join ktb_operarios     as o  with (nolock) on o.operario=mo.maestro
+            left  join ktb_operarios     as a1 with (nolock) on a1.operario=mo.ayudante1
+            left  join ktb_operarios     as a2 with (nolock) on a2.operario=mo.ayudante2
+            left  join ktb_operarios     as me with (nolock) on me.operario=mo.mecanico
+            left  join ktb_ordendefabobs as ob with (nolock) on ob.id_ordendefab=t.id
+            left  join ktb_procesos      as pr with (nolock) on pr.proceso=mo.proceso
+            left  join RTS.softland.cwtauxi   as cli with (nolock) on cli.CodAux = t.cliente  collate database_default
+            left  join RTS.softland.nw_nventa as nv  with (nolock) on nv.NVNumero = t.folio
+            left  join RTS.softland.nw_detnv  as det with (nolock) on det.NVNumero = t.folio
+            where t.id = ${ orden.id }
+            order by mo.fechamov desc;
+            `;
         } else {
             query = `
             select 'sin accion en ordenes' as error ;

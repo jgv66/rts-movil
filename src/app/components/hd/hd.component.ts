@@ -8,9 +8,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class HdComponent {
 
   @Input() titulo;
-  @Output() clickPost = new EventEmitter();
-  @Output() addPost = new EventEmitter();
+  @Output() clickPost  = new EventEmitter();
+  @Output() addPost    = new EventEmitter();
   @Output() deletePost = new EventEmitter();
+  @Output() printPost  = new EventEmitter();
 
   constructor() { }
 
@@ -25,4 +26,9 @@ export class HdComponent {
   deleteClick() {
     this.deletePost.emit();
   }
+
+  printClick() {
+    this.printPost.emit();
+  }
+
 }

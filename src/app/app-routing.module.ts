@@ -16,7 +16,8 @@ const routes: Routes = [
   { path: 'defoperaciones', loadChildren: () => import('./pages/defoperaciones/defoperaciones.module').then( m => m.DefoperacionesPageModule) },
   { path: 'defestatus',     loadChildren: () => import('./pages/defestatus/defestatus.module').then( m => m.DefestatusPageModule) },
   { path: 'addof',          loadChildren: () => import('./pages/addof/addof.module').then( m => m.AddofPageModule)  },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'verdataof',      loadChildren: () => import('./pages/verdataof/verdataof.module').then( m => m.VerdataofPageModule)},
+  { path: '',               redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({

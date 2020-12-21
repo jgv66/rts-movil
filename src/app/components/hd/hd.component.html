@@ -13,6 +13,9 @@
             <ion-button (click)="deleteClick()" *ngIf=" deletePost.observers.length>0 ">
                 <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
             </ion-button>
+            <ion-button (click)="printClick()" *ngIf=" printPost.observers.length>0 ">
+                <ion-icon slot="icon-only" name="print-outline"></ion-icon>
+            </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>

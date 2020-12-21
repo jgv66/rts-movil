@@ -11,7 +11,9 @@ import { NetworkengineService } from '../../services/networkengine.service';
 })
 export class DefofdetPage implements OnInit {
   //
+  @Input() facilitador;
   @Input() orden: any;
+  @Input() opcion;
   //
   buscando = false;
   maquina = ''; nombremaq = '';
@@ -20,6 +22,11 @@ export class DefofdetPage implements OnInit {
   ayudante2 = ''; nombreayu2 = '';
   mecanico = ''; nombremec = '';
   proceso = ''; nombrepro = '';
+  cantidad = 0;
+  turno = ''; nombretur = '';
+  impresion = '';
+  turnos = [{turno: 'D', descripcion: 'Día'},
+            {turno: 'N', descripcion: 'Noche'}];
   //
   accion = '';
   titulo = '';
@@ -30,13 +37,21 @@ export class DefofdetPage implements OnInit {
               private funciones: FuncionesService ) {}
 
   ngOnInit() {
+    console.log(this.orden, this.opcion);
     //
-    this.datos.getMaquinas();
-    this.datos.getOperarios();
-    this.datos.getProcesos();
-    //
-    console.log(this.orden);
-    this.titulo = 'Definir OF: ' + this.orden.folio;
+    if ( this.opcion === 'A' ) {
+      this.titulo = 'Definir OF: ' + this.orden.folio;
+    } else if ( this.opcion === 'P' ) {
+      this.titulo = 'Actualizar OF: ' + this.orden.folio;
+      //
+      this.maquina   =  this.orden.maquina;
+      this.maestro   = this.orden.maestro;
+      this.ayudante1 = this.orden.ayudante1;
+      this.ayudante2 = this.orden.ayudante2;
+      this.mecanico  = this.orden.mecanico;
+      this.proceso   = this.orden.proceso;
+      //
+    }
   }
 
   salir() {
@@ -45,8 +60,12 @@ export class DefofdetPage implements OnInit {
 
   actualizar() {
     //
-    if ( this.maquina === '' || this.maestro === ''  ) {
-      this.funciones.msgAlertErr( 'Debe completar datos obligatorios de Máquina y Maestro.' );
+    if ( this.maquina === '' || this.maestro === '' ) {
+      this.funciones.msgAlertErr( 'Debe completar datos obligatorios mínimos.' );
+      return;
+    }
+    if ( ( this.cantidad <= 0 || this.turno === '' ) && this.opcion === 'P'  ) {
+      this.funciones.msgAlertErr( 'Debe completar datos obligatorios mínimos. Cantidad, turno' );
       return;
     }
     //
@@ -59,7 +78,10 @@ export class DefofdetPage implements OnInit {
       ayudante1: this.ayudante1,
       ayudante2: this.ayudante2,
       mecanico:  this.mecanico,
-      proceso:   this.proceso
+      proceso:   this.proceso,
+      cantidad:  this.cantidad,
+      turno:     this.turno,
+      impresion: this.impresion
     };
     //
     if ( data ) {

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Usuario, Cliente } from '../models/modelos.modelo';
 import { Plugins } from '@capacitor/core';
 import { NetworkengineService } from './networkengine.service';
-import { FuncionesService } from './funciones.service';
 
 const { Storage } = Plugins;
 
@@ -17,9 +16,9 @@ export class BaselocalService {
   //
   operarios = [];
   mecanicos = [];
-  maquinas = [];
-  procesos = [];
-
+  maquinas  = [];
+  procesos  = [];
+  //
   constructor( private netWork: NetworkengineService ) {
     console.log('<<< BaseLocalProvider >>>');
     this.inicializaTodo();
@@ -65,8 +64,6 @@ export class BaselocalService {
   getMaquinas() {
     this.netWork.comWithServer('maquinas', { accion: 'select', idusuario: this.user.id } )
       .subscribe( (data: any) => {
-        //
-        console.log(data);
         //
         try {
           if ( data.resultado !== 'ok' || data.datos.length === 0 ) {
