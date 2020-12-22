@@ -25,7 +25,7 @@ export class AddofPage {
     this.modalCtrl.dismiss();
   }
 
-  aBuscarNotaDeVenta( event ) {
+  aBuscarNotaDeVenta() {
     //
     this.buscando = true;
     this.netWork.comWithServer('ordenesSoft',

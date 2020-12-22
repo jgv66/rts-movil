@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // carpeta de imagenes: desde donde se levanta el servidor es esta ruta -> /root/trial-server-001/public
 app.use(express.static('public'));
 
-// servidor escuchando puerto 3012
-var server = app.listen(3012, function() {
+// servidor escuchando puerto 3015
+var server = app.listen(3015, function() {
     console.log("Escuchando http en el puerto: %s", server.address().port);
 });
 
@@ -240,6 +240,7 @@ app.post('/ordenes',
             left  join RTS.softland.nw_nventa as nv  with (nolock) on nv.NVNumero = t.folio
             left  join RTS.softland.nw_detnv  as det with (nolock) on det.NVNumero = t.folio
             where t.id = ${ orden.id }
+              and coalesce(mo.qproducida,0) > 0
             order by mo.fechamov desc;
             `;
         } else {
