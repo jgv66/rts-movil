@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { InicioPageRoutingModule } from './inicio-routing.module';
-
-import { InicioPage } from './inicio.page';
+import { RevisarocPageRoutingModule } from './revisaroc-routing.module';
+import { RevisarocPage } from './revisaroc.page';
 import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
@@ -14,9 +13,9 @@ import { ComponentsModule } from '../../components/components.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    ComponentsModule,
-    InicioPageRoutingModule
+    ComponentsModule,    
+    RevisarocPageRoutingModule
   ],
-  declarations: [InicioPage]
+  declarations: [RevisarocPage]
 })
-export class InicioPageModule {}
+export class RevisarocPageModule {}

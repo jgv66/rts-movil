@@ -1,9 +1,10 @@
 // console.log("hola mundo");
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 // configuracion
-var sql = require('mssql');
-var dbconex = require('./conexion_mssql.js');
+const sql = require('mssql');
+const dbconex = require('./conexion_mssql.js');
+const servicios = require('./k_servicios.js');
 //
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -11,7 +12,7 @@ app.use(function(req, res, next) {
     next();
 });
 //
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -19,16 +20,49 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 // servidor escuchando puerto 3015
-var server = app.listen(3015, function() {
+const server = app.listen(3015, function() {
     console.log("Escuchando http en el puerto: %s", server.address().port);
 });
 
+const pool = Array(4);
+const sqlpool = Array(4);
+// master
+pool[0] = new sql.ConnectionPool(dbconex[0]);
+sqlpool[0] = pool[0].connect();
+pool[0].on('error', err => console.log('bd-master', err));
+// RTS
+pool[1] = new sql.ConnectionPool(dbconex[1]);
+sqlpool[1] = pool[1].connect();
+pool[1].on('error', err => console.log('bd-coñaripe', err));
+//
+// await sqlpool[1];
+// await sqlpool[0];
 // pruebas
+
 app.get('/ping',
     function(req, res) {
         res.json({ resultado: 'ok', datos: dbconex });
     }
 );
+app.post('/dbZap', (req, res) => {
+    console.log(req.body);
+    servicios.dbZap(sqlpool, req.body)
+        .then(function(data) {
+            try {
+                console.log(data);
+                if (data) {
+                    res.json({ resultado: "ok", count: data.length, datos: data });
+                } else {
+                    res.json({ resultado: "nodata", datos: '' });
+                }
+            } catch (error) {
+                res.status(500).json({ resultado: 'error', datos: error });
+            }
+        })
+        .catch(function(error) {
+            res.status(500).json({ resultado: 'error', datos: error });
+        });
+});
 // --------------------------------------------ordenes
 app.post('/ordenes',
     function(req, res) {
@@ -251,8 +285,7 @@ app.post('/ordenes',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -312,8 +345,7 @@ app.post('/ordenesSoft',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[1])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -384,8 +416,7 @@ app.post('/maquinas',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -460,8 +491,7 @@ app.post('/operarios',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -554,8 +584,7 @@ app.post('/tml',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -619,8 +648,7 @@ app.post('/usuarios',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -681,8 +709,7 @@ app.post('/procesos',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })
@@ -744,8 +771,91 @@ app.post('/estatus',
         //        
         console.log(query);
         //
-        sql.close();
-        sql.connect(dbconex[0])
+        sqlpool[0]
+            .then(pool => {
+                return pool.request().query(query);
+            })
+            .then(resultado => {
+                // console.log(resultado);
+                res.json({ resultado: 'ok', datos: resultado.recordset });
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({ resultado: 'error', datos: err });
+            });
+
+    });
+// --------------------------------------------ordenes de compra
+app.post('/ordenesdecompra',
+    function(req, res) {
+        console.log('/ordenes', req.body);
+        var pro;
+        var query = '';
+        try {
+            pro = JSON.parse(req.body.datos);
+        } catch (error) {
+            pro = undefined;
+        }
+        console.log(pro);
+        //
+        if (req.body.accion === 'select') {
+            query = `
+            with oc
+            as (SELECT distinct [NumOC]
+                FROM [RTS_PRU].[dbo].[ARE_OCDet]
+                where CodEstado = 'PE' )
+            select oc.NumOC as numero
+                ,(select top 1 [FechaOC] from [RTS_PRU].[dbo].[ARE_OCDet] as a where a.NumOC = oc.NumOC )	 as fecha
+                ,(select top 1 [ObservOC] from [RTS_PRU].[dbo].[ARE_OCDet] as a where a.NumOC = oc.NumOC )	 as obs
+                ,(select top 1 [CodAux] from [RTS_PRU].[dbo].[ARE_OCDet] as a where a.NumOC = oc.NumOC )	 as proveedor
+                ,(select top 1 [NomAux] from [RTS_PRU].[dbo].[ARE_OCDet] as a where a.NumOC = oc.NumOC )	 as razonsocial
+                ,(select top 1 [FecFinalOC] from [RTS_PRU].[dbo].[ARE_OCDet] as a where a.NumOC = oc.NumOC ) as fechafinal
+            from oc as oc
+            order by oc.NumOC;
+        `;
+        } else if (req.body.accion === 'verdetalleoc') {
+            query = `
+            select *
+            from [RTS_PRU].[dbo].[ARE_OCDet]
+            where NumOC = '${ req.body.numero }'
+            order by NumOC;
+        `;
+        } else if (req.body.accion === 'contardetalleoc') {
+            query = `
+            select count(*) as itemes
+            from [RTS_PRU].[dbo].[ARE_OCDet]
+            where NumOC = '${ req.body.numero }' ;
+        `;
+        } else if (req.body.accion === 'insert') {
+            query = `
+            insert into [ktb_procesos] (proceso, descripcion) 
+            values ('${ pro.proceso }','${ pro.descripcion }' ) ;
+        `;
+        } else if (req.body.accion === 'update') {
+            query = `
+            update [ktb_procesos] 
+            set descripcion='${ pro.descripcion }'
+            where proceso='${ pro.proceso }' ;
+        `;
+        } else if (req.body.accion === 'delete') {
+            query = `
+            if  not exists ( select * from [ktb_ordendefab] with (nolock) where proceso = '${ pro.proceso }' ) begin 
+                delete [ktb_procesos] where proceso='${ pro.proceso }'
+                select cast(1 as bit) as resultado, cast(0 as bit) as error,'' as  mensaje;;
+            end
+            else begin
+                select cast(0 as bit) as resultado, cast(1 as bit) as error, 'Proceso existe en OF' as  mensaje;
+            end ;
+        `;
+        } else {
+            query = `
+            select 'sin accion en procesos' as error ;
+        `;
+        }
+        //        
+        console.log(query);
+        //
+        sqlpool[0]
             .then(pool => {
                 return pool.request().query(query);
             })

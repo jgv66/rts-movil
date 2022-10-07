@@ -1,0 +1,80 @@
+ion-content {
+    font-size: 75%;
+}
+
+ion-input {
+    text-align: right;
+}
+
+// ion-item {
+//     font-size: 75% !important;
+//     // max-height: 48px;
+// }
+ion-select {
+    font-size: 115% !important;
+    max-width: 100% !important;
+}
+
+ion-row {
+    max-height: 80%;
+}
+
+.itemInput {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.texto-chico {
+    font-size: 100%;
+}
+
+.separar {
+    margin-top: 20px;
+}
+
+.sinborde {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.filaboton {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.boton {
+    margin-top: 25px;
+    margin-bottom: 20px;
+    max-width: 90%;
+    margin-left: 5%;
+}
+
+.texto {
+    text-align: justify;
+}
+
+.text-class {
+    text-align: right;
+}
+
+.scanner-buttons {
+    margin: 0px;
+    position: absolute;
+    bottom: 100px;
+    width: 100vw;
+    height: 50px;
+    z-index: 11;
+}
+
+.scan-box {
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+    content: '';
+    display: block;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,43 @@
+<div>
+    <app-hd titulo="Revisar OC" (clickPost)="salir()"></app-hd>
+</div>
+
+<ion-content>
+
+    <ion-card class="welcome-card">
+        <img src="assets/imgs/oc_top_02.png" alt="x1">
+    </ion-card>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" size-xl="3" size-lg="4" size-md="6" size-sm="6" size-xs="12">
+                <ion-card>
+                    <ion-item>
+                        <h3>
+                            <ion-label>OC: <b>{{ orden.numero }}</b></ion-label>
+                        </h3>
+                    </ion-item>
+                    <ion-card-header>
+                        <ion-card-subtitle>
+                            Fecha : <b>{{ orden.fecha | date }}</b>
+                        </ion-card-subtitle>
+                        <ion-card-subtitle>
+                            Proveedor : <b>{{ orden.razonsocial }}</b>
+                        </ion-card-subtitle>
+                        <ion-card-subtitle>
+                            Obs. : <b>{{ orden.obs }}</b>
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content style="font-size: 90%;">
+                        <ion-item *ngFor="let det of detalle; let i = index;">
+                            <ion-label>{{ det.CodProd }}</ion-label>
+                            <p>Cant.: {{ det.Cantidad | number:"1.0-0" }}</p>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

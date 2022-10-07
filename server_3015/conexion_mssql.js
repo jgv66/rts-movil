@@ -26,18 +26,3 @@ module.exports = [{
         }
     }
 ];
-
-/*
-        server: '45.182.116.32',
-        port: 1779,
-        user: 'valencia',
-        password: 'valencia$$$',
-        database: 'valencia',
-        options: { encrypt: false, enableArithAbort: true }, // Use this if you're on Windows Azure
-        pool: {
-            max: 10,
-            min: 0,
-            idleTimeoutMillis: 10000
-        }
-
-*/

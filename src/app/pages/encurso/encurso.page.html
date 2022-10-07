@@ -1,0 +1,82 @@
+<app-hd [hidden]="scanActive" titulo="Recepción de Compras " (clickPost)="salir()"></app-hd>
+
+<ion-content class="animated fadeIn">
+
+    <ion-card>
+        <img src="assets/imgs/barcode-002.jpg" alt="x1">
+        <ion-card-content>
+            <p class="texto" *ngIf="!scanActive">
+                Aquí debe incorporar los códigos que ud. va leyendo. Puede usar la digitación con el ícono superior 'Aa' o utilizar su propia cámara en el ícono de barras a la derecha del ingreso por 'Código'.
+            </p>
+            <p class="texto" *ngIf="scanActive">
+                Ajuste la cámara acercando o alejándola para que el código de barras sea leido. Una vez que sea capturado la ventana se cerrará de manera automática.
+            </p>
+        </ion-card-content>
+    </ion-card>
+
+    <!-- <ion-card> -->
+    <ion-grid>
+        <ion-row>
+            <ion-col size="6">
+                <ion-button color="primary" expand="block" size="small">Itemes {{ itemes | number:"1.0-0" }}</ion-button>
+            </ion-col>
+            <ion-col size="6">
+                <ion-button color="primary" expand="block" size="small" (click)="verMisCapturados()">Leidos {{ contados | number:"1.0-0" }}</ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <!-- </ion-card> -->
+
+    <!-- Shows our camera stream -->
+    <ion-card [hidden]="!scanActive">
+        <barcode-scanner-livestream type="code_128" (valueChanges)="onValueChanges($event)" (started)="(onStarted)"></barcode-scanner-livestream>
+        <!-- <div [hidden]="!barcodeValue">
+            {{ barcodeValue }}
+        </div> -->
+        <ion-button (click)=" scanActive = !scanActive ">
+            <ion-icon slot="start" name="exit-outline"></ion-icon>
+            Salir sin lectura
+        </ion-button>
+    </ion-card>
+
+    <!-- Used to render the camera stream images -->
+    <canvas #canvas hidden></canvas>
+    <!-- {{ scanResult }} -->
+
+    <ion-card [hidden]="scanActive">
+        <ion-list lines="full">
+            <ion-item class="itemInput">
+                <ion-label for="codigo" style="margin-right: 15px;font-weight:bold;" position="fixed">Código</ion-label>
+                <ion-input id="codigo" type="text" [(ngModel)]="codigo" clearOnEdit="true" debounce="400" (ionChange)="yaConDato()" #inputCodigo></ion-input>
+                <ion-button size="small" expand="block" (click)=" scanActive = !scanActive " [hidden]="scanActive" style="margin-top: 8px;margin-left:15px;">
+                    <ion-icon size="small" slot="icon-only" name="barcode-outline"></ion-icon>
+                </ion-button>
+            </ion-item>
+            <ion-item *ngIf=" descripcion ">
+                <ion-label style="font-size: 90%;font-weight: bold;">{{ descripcion }}</ion-label>
+            </ion-item>
+            <ion-item class="itemInput">
+                <ion-label style="margin-right: 15px;font-weight:bold;" position="fixed">Unidad</ion-label>
+                <ion-input *ngIf=" unidadIgual === true " class="ion-text-right" type="text" [(ngModel)]="unidad" disabled="true"></ion-input>
+                <ion-select *ngIf=" unidadIgual === false " class="ion-text-right" name="unidad" [(ngModel)]="unidad" interface="popover" mode="ios">
+                    <ion-select-option *ngFor="let un of unidades" value="{{ un.unidad }}">{{ un.unidad }}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item class="itemInput">
+                <ion-label style="margin-right: 15px;font-weight:bold;" position="fixed">Cantidad</ion-label>
+                <ion-input class="ion-text-right" type="number" [(ngModel)]="cantidad" clearOnEdit="true" #inputCantid></ion-input>
+            </ion-item>
+            <ion-item class="itemInput">
+                <ion-label style="margin-right: 15px;font-weight:bold;">Nro de Lote (opcional)</ion-label>
+                <ion-input type="text" [(ngModel)]="nrolote" clearOnEdit="true"></ion-input>
+            </ion-item>
+            <ion-button (click)="add2Lista()" expand="block" fill="solid" size="small" class="boton">
+                <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                Agrega a la lista
+            </ion-button>
+        </ion-list>
+    </ion-card>
+
+    <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+
+</ion-content>
